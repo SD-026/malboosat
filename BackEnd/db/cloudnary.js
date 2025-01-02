@@ -5,8 +5,8 @@ dotenv.config({})
 
  cloudinary.config({
     cloud_name: 'davcawbru', 
-    api_key: '911717546847471', 
-    api_secret:'D307orJ9bMTU7C-83cEdUSBXZU8'
+    api_key: '462573635967489', 
+    api_secret:'9JV7BV-xFHN_NH6INpQIhPQMQS4'
 })
 
 export default cloudinary

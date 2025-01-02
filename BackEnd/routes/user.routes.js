@@ -22,13 +22,18 @@ router.post('/login',[
     body('email').isEmail().withMessage('innvalid Email'),
     body('password').isLength({min:6}).withMessage('innvalid password'),
 ],userControler.login)
+
 router.get('/logout',userControler.blacklistToken)
 router.post('/edit',AuthUser,upload.single('profilePic'),userControler.Edit)
 
+router.get('/getcart',AuthUser,userControler.getcart)
+router.post('/addtocart',userControler.add_to_cart)
 
 
 
-// router.get('/:id/profile',userControler.getUserProfile)
+
+
+
 // router.post('/follow',AuthUser,userControler.follow_un_follow)
 // router.get('/suggest',AuthUser,userControler.suggestedusers)
 

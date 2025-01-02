@@ -5,6 +5,7 @@ import bcrypt from 'bcrypt'
 import { blacklist } from '../models/blackList.Token.js';
 import dataURI from '../db/dataURI.js';
 import cloudinary from '../db/cloudnary.js';
+import { Product } from '../models/Product.js';
 
 
 export async function register(req, res, next) {
@@ -89,7 +90,7 @@ export async function blacklistToken(req, res) {
 
 export async function Edit(req, res) {
     const userID = req.user;
-    const { bio, gender } = req.body;
+    const { username,password, gender } = req.body;
     const profilePic = req.file;
 
     try {
@@ -113,7 +114,7 @@ export async function Edit(req, res) {
         }
 
         // Update user fields
-        if (bio) user.bio = bio;
+        if (username) user.username = username;
         if (gender) user.gender = gender;
         if (profilePic && cloudResponse) user.profilePic = cloudResponse.secure_url;
 
@@ -123,12 +124,79 @@ export async function Edit(req, res) {
         res.status(200).json({
             message: "User updated successfully",
             user,
+            sucess: true
         });
     } catch (error) {
         console.error("Error updating user:", error);
         res.status(500).json({ message: "Server error", error });
     }
 }
+
+export async function getcart(req, res) {
+    const userID = req.user;
+
+
+    try {
+        // Validate user existence
+        const user = await User.findById(userID._id);
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        const cart=user.Cart;
+        await user.save();
+
+        res.status(200).json({
+            message: "cart Get successfully",
+            cart,
+            sucess: true
+        });
+    } catch (error) {
+        console.error("Error updating user:", error);
+        res.status(500).json({ message: "Server error", error });
+    }
+}
+
+
+export async function add_to_cart(req, res) {
+    // const userID = req.user;
+
+    const {userID,P_id}=req.body
+    console.log(userID)
+
+
+    try {
+        // Validate user existence
+
+        const product = await Product.findById(P_id);
+        if (!product) {
+            return res.status(404).json({ message: "product not found" });
+        }
+
+
+        const user = await User.findById(userID._id);
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        
+        
+             user.Cart.push(product);
+    
+        await user.save();
+
+        res.status(200).json({
+            message: "Add to cart  Get successfully",
+            cart,
+            sucess: true
+        });
+    } catch (error) {
+        console.error("Error updating user:", error);
+        res.status(500).json({ message: "Server error", error });
+    }
+}
+
+
 
 
 

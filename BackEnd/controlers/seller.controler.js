@@ -5,6 +5,7 @@ import bcrypt from 'bcrypt'
 import { blacklist } from '../models/blackList.Token.js';
 import dataURI from '../db/dataURI.js';
 import cloudinary from '../db/cloudnary.js';
+import { Product } from '../models/Product.js';
 
 
 export async function register(req, res, next) {
@@ -213,4 +214,41 @@ export async function follow_un_follow(req, res) {
     }
 
 }
+
+export async function New_Product(req, res, next) {
+        const {productname,productdescribtion,productprice,image,owner}=req.body
+        // const authid = req.user._id
+        // const image=req.file
+        // console.log("bsdk",image)
+    
+        // if(!image) {return res.status(400).json({message:'image not found'})}
+    
+        // const optimze_img=await sharp(image.buffer)
+        // .resize({ width: 800, height: 800,fit:'inside' })
+        // .toFormat('jpeg',{quality:80})
+        // .toBuffer()
+    
+        // const fileuri=`data:image/jpeg;base64,${optimze_img.toString('base64')}`
+        
+        // const result=await cloudinary.uploader.upload(fileuri)
+        
+        // console.log("result",result)
+    
+        const data={
+            // image:result.secure_url,
+            productname,productdescribtion,productprice,owner
+        }
+        const C_product =await Product.create(data)
+        
+    
+    
+        const user= await User.findByIdAndUpdate({_id:owner},{$push:{products:C_product._id}})
+        // console.log(user,"created")
+        
+    
+    
+        // Send a response with the token and us    er data
+        res.status(201).json({user,C_product,message:"product created successfully",success:true });
+    }
+    
 

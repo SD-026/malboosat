@@ -1,6 +1,6 @@
 import express from 'express';
 import { body } from 'express-validator';
-import * as userControler from '../controlers/user.controler.js'
+import * as userControler from '../controlers/seller.controler.js'
 import  AuthUser from '../middlewares/auth.middleware.js';
 // import upload from multer
 // import multer from '../middlewares/multer.js';
@@ -20,7 +20,7 @@ router.post('/login',[
 router.get('/logout',userControler.blacklistToken)
 router.post('/edit',AuthUser,upload.single('profilePic'),userControler.Edit)
 
-// router.post('/createproduct',AuthUser,userControler.createproduct)
+router.post('/New_Product',userControler.New_Product)
 // router.post('/editproduct',AuthUser,userControler.editproduct)
 // router.post('/deleteproduct',AuthUser,userControler.deleteproduct)
 // router.post('/deleteproduct',AuthUser,userControler.deleteproduct)

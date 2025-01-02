@@ -47,6 +47,7 @@ const userShema=new mongoose.Schema({
     custmuerorders:[{type:mongoose.Schema.Types.ObjectId, ref:'order'}],
     Cart:[{type:Object }],
     sellersorders:[{type:mongoose.Schema.Types.ObjectId, ref:'selerorder'}],
+    products:[{type:mongoose.Schema.Types.ObjectId,ref:'product'}]
 
     // :[{type:mongoose.Schema.Types.ObjectId, ref:'Post'}],
     // bookmark:[{type:mongoose.Schema.Types.ObjectId, ref:'Post'}]
