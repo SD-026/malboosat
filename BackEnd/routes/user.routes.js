@@ -11,11 +11,7 @@ router.post('/register',[
     body('email').isEmail().withMessage('innvalid Email'),
     body('username').isLength({min:3}).withMessage('Please enter min 3 character'),
     body('password').isLength({min:6}).withMessage('innvalid Email'),
-    body('gender')
-    .isIn(['male', 'female'])
-    .withMessage('Invalid gender'), 
-  
-
+   
 ],userControler.register)
 
 router.post('/login',[
@@ -24,10 +20,22 @@ router.post('/login',[
 ],userControler.login)
 
 router.get('/logout',userControler.blacklistToken)
+
 router.post('/edit',AuthUser,upload.single('profilePic'),userControler.Edit)
 
 router.get('/getcart',AuthUser,userControler.getcart)
-router.post('/addtocart',userControler.add_to_cart)
+router.post('/addtocart',AuthUser,userControler.add_to_cart)
+router.post('/removefromcart',AuthUser,userControler.remove_from_cart)
+
+router.post('/updatecart',AuthUser,userControler.update_cart)
+router.post('/placeorder',AuthUser,userControler.place_order)
+
+
+
+
+
+
+
 
 
 

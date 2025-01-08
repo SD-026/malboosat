@@ -5,7 +5,7 @@ import connecttodb from "./db/db.js";
 import router from './routes/user.routes.js'
 import cookieParser from "cookie-parser";
 import sellerrouter from './routes/seller.routes.js'
-// import msgRoutes from './routes/message.routes.js'
+import product from './routes/product.routes.js'
 import { app,server } from "./socket/socket.js";
 import dotenv from 'dotenv'
 
@@ -24,6 +24,8 @@ connecttodb()
 
 app.use('/user', router)
 app.use('/seller', sellerrouter)
+app.use('/product', product)
+
 // app.use('/post',postRoutes )
 // app.use('/msg',msgRoutes)
 

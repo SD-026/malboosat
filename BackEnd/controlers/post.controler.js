@@ -10,6 +10,8 @@
 // import { Comment } from '../models/Comment.js';
 // import { getReciverSocketId, io } from '../socket/socket.js';
 
+import { Product } from "../models/Product.js"
+
 
 // export async function addnewpost(req, res, next) {
 //     const {caption}=req.body
@@ -286,3 +288,37 @@
 //    }
 // }
 
+
+
+ export async function all_product(req, res, next) {
+        
+        try {
+            const products = await Product.find()
+            // console.log(user)
+
+                res.status(200).json({products,messages:"all product fetched successfully",success:true})
+            
+            
+        }
+        catch (err) {
+            console.log(err)
+            return res.status(500).json({ message: 'Server error' });
+        }
+    }
+
+    export async function get_product(req, res, next) {
+        const { id } = req.params;
+        
+        try {
+            const products = await Product.findById({_id:id})
+            // console.log(user)
+
+                res.status(200).json({products,messages:"all product fetched successfully",success:true})
+            
+            
+        }
+        catch (err) {
+            console.log(err)
+            return res.status(500).json({ message: 'Server error' });
+        }
+    }

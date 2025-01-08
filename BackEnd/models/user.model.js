@@ -34,7 +34,8 @@ const userShema=new mongoose.Schema({
     gender:{
         type:String,
        enum:['male','female'],
-       required:true
+       default:'female'
+    //    required:true
        
     },
     role: {
@@ -44,9 +45,9 @@ const userShema=new mongoose.Schema({
     },
     
 
-    custmuerorders:[{type:mongoose.Schema.Types.ObjectId, ref:'order'}],
-    Cart:[{type:Object }],
-    sellersorders:[{type:mongoose.Schema.Types.ObjectId, ref:'selerorder'}],
+    custmuerorders:[{type:mongoose.Schema.Types.ObjectId, ref:'Order'}],
+    Cart:[{type:mongoose.Schema.Types.ObjectId,ref:'Cart' }],
+    sellersorders:[{type:mongoose.Schema.Types.ObjectId, ref:'Order'}],
     products:[{type:mongoose.Schema.Types.ObjectId,ref:'product'}]
 
     // :[{type:mongoose.Schema.Types.ObjectId, ref:'Post'}],
@@ -74,5 +75,7 @@ userShema.statics.hashPassword=async function(password){
 }
 
 export const User=mongoose.model('users',userShema)
+
+
 
 

@@ -6,6 +6,8 @@ import { blacklist } from '../models/blackList.Token.js';
 import dataURI from '../db/dataURI.js';
 import cloudinary from '../db/cloudnary.js';
 import { Product } from '../models/Product.js';
+import { Order } from '../models/order.js';
+import sharp from 'sharp';
 
 
 export async function register(req, res, next) {
@@ -123,6 +125,7 @@ export async function Edit(req, res) {
         // Update user fields
         if (bio) user.bio = bio;
         if (gender) user.gender = gender;
+
         if (profilePic && cloudResponse) user.profilePic = cloudResponse.secure_url;
 
         // Save updated user data
@@ -216,39 +219,199 @@ export async function follow_un_follow(req, res) {
 }
 
 export async function New_Product(req, res, next) {
-        const {productname,productdescribtion,productprice,image,owner}=req.body
-        // const authid = req.user._id
-        // const image=req.file
-        // console.log("bsdk",image)
-    
-        // if(!image) {return res.status(400).json({message:'image not found'})}
-    
-        // const optimze_img=await sharp(image.buffer)
-        // .resize({ width: 800, height: 800,fit:'inside' })
-        // .toFormat('jpeg',{quality:80})
-        // .toBuffer()
-    
-        // const fileuri=`data:image/jpeg;base64,${optimze_img.toString('base64')}`
-        
-        // const result=await cloudinary.uploader.upload(fileuri)
-        
-        // console.log("result",result)
-    
-        const data={
-            // image:result.secure_url,
-            productname,productdescribtion,productprice,owner
-        }
-        const C_product =await Product.create(data)
-        
-    
-    
-        const user= await User.findByIdAndUpdate({_id:owner},{$push:{products:C_product._id}})
-        // console.log(user,"created")
-        
-    
-    
-        // Send a response with the token and us    er data
-        res.status(201).json({user,C_product,message:"product created successfully",success:true });
+    const { productname, productdescribtion, productprice } = req.body;
+    const userID = req.user._id;
+    const images = req.files; // Array of uploaded images
+
+    if (!images || images.length === 0) {
+        return res.status(400).json({ message: 'At least one image is required' });
     }
+
+    try {
+        // Optimize and upload each image to Cloudinary
+        const uploadedImages = await Promise.all(
+            images.map(async (image) => {
+                const optimizedImage = await sharp(image.buffer)
+                    .resize({ width: 800, height: 800, fit: 'inside' })
+                    .toFormat('jpeg', { quality: 80 })
+                    .toBuffer();
+
+                const fileUri = `data:image/jpeg;base64,${optimizedImage.toString('base64')}`;
+                const result = await cloudinary.uploader.upload(fileUri);
+                return result.secure_url; // Return the Cloudinary URL
+            })
+        );
+
+        // Create product data
+        const data = {
+            productname,
+            productdescribtion,
+            productprice,
+            owner: userID,
+            P_images: uploadedImages, // Store array of image URLs
+        };
+
+        // Save product to database
+        const C_product = await Product.create(data);
+
+        // Add product to user's product list
+        await User.findByIdAndUpdate(
+            { _id: userID },
+            { $push: { products: C_product._id } }
+        );
+
+        res.status(201).json({
+            user: req.user,
+            C_product,
+            message: 'Product created successfully',
+            success: true,
+        });
+    } catch (error) {
+        console.error('Error creating product:', error);
+        res.status(500).json({ message: 'Internal Server Error', error: error.message });
+    }
+}
+
     
+
+
+    export async function get_all_product(req, res, next) {
+        try {
+            const products = await Product.find({})
+            res.status(200).json(products)
+        } catch (err) {
+            console.log(err)
+            return res.status(500).json({ message: 'Server error' });
+        }
+    }
+
+    export async function editproduct(req, res, next) {
+        const {userID, productID,productname,productdescribtion,productprice,owner} = req.body
+        // const P_image =req.file
+        try {
+            const seller = await User.findByID({_id:userID})
+
+            if (seller&& (seller.role==='seller'||seller.role==='admin')){
+            const product  = await Product.findByID({_id:productID})
+            // if (P_image) {
+            //     try {
+            //         const fileuri = dataURI(profilePic);
+            //         cloudResponse = await cloudinary.uploader.upload(fileuri);
+            //     } catch (error) {
+            //         console.error("Error uploading to Cloudinary:", error);
+            //         return res.status(500).json({ message: "Failed to upload profile picture" });
+            //     }
+            // }
+
+            if(!product) return res.status(400).json({message:'product not found'})
+          
+
+                if (productname) product.productname = productname;
+                if (productdescribtion) product.productdescribtion = productdescribtion;
+                if (productprice) product.productprice = productprice;
+            //   if (P_image && cloudResponse) product.P_image = cloudResponse.secure_url;
+
+                // if (image) product.image = image;
+                await product.save()
+                res.status(200).json({message:'product updated successfully',product})
+               
+            }
+
+            
+            res.status(200).json({
+                message: "user is not seller",
+                success: false
+            })
+        } catch (err) {
+            console.log(err)
+            return res.status(500).json({ message: 'Server error' });
+        }
+    }
+
+
+
+    
+    export async function delete_product(req, res, next) {
+        const {userID, productID} = req.body
+        try {
+            const seller = await User.findByID({_id:userID})
+
+            if (seller&& (seller.role==='seller'||seller.role==='admin')){
+
+                const product  = await Product.findByIdAndDelete({_id:productID})
+                if(!product) return res.status(400).json({message:'product not found'})
+
+                res.status(200).json({message:'product deleted successfully',product,success:true})
+            }
+            res.status(200).json({
+                message: "user is not seller",
+                success: false
+            })
+        }
+        catch (err) {
+            console.log(err)
+            return res.status(500).json({ message: 'Server error' });
+        }
+    }
+
+    
+
+    // get_sellersproduct
+    export async function get_sellersproduct(req, res, next) {
+        const {userID} = req.body
+        try {
+            const seller = await User.findById({_id:userID})
+            if(seller&&(seller.role==='seller'||seller.role==='admin')){
+                const products = await Product.find({owner:userID})
+                res.status(200).json({products,messages:"sellers products fetched successfully",success:true})
+            }
+            res.status(200).json({
+                message: "user is not seller",
+                success: false
+            })
+        }
+        catch (err) {
+            console.log(err)
+            return res.status(500).json({ message: 'Server error' });
+        }
+    }
+
+    
+    export async function updateOrderStatus(req, res, next) {
+        const {orderID, status} = req.body
+        try {   
+            const order = await Order.findByIdAndUpdate({_id:orderID}, {status: status})
+            if(!order) return res.status(400).json({message:'order not found'})
+            res.status(200).json({message:'order status updated successfully',order,success:true})
+        } catch (err) {
+            console.log(err)
+            return res.status(500).json({ message: 'Server error' });
+        }
+    }
+
+    export async function getOrderHistory(req, res, next) {
+        const {userID} = req.body
+        try {
+            const user = await User.findById({_id:userID})
+            // console.log(user)
+
+            if(user&&(user.role==='seller'||user.role==='admin')){
+                const orders=await user.populate({path:'sellersorders',model: 'Order'})
+                res.status(200).json({orders,messages:"sellers order history fetched successfully",success:true})
+            }
+            else{
+                const orders=await user.populate({path:'custmuerorders',model: 'Order'})
+                res.status(200).json({orders,messages:"sellers order history fetched successfully",success:true})
+            }
+            
+        }
+        catch (err) {
+            console.log(err)
+            return res.status(500).json({ message: 'Server error' });
+        }
+    }
+
+
+
+
 

@@ -17,10 +17,14 @@ const productShema=new mongoose.Schema({
         required: true
       
     },
-    image:{
-        type: String,
-        // required: true
-    },
+    P_images: {
+        type: [String], // Array of strings to store multiple image URLs
+        required: true,
+      },
+      highlights:{
+        type: [String], // Array of strings to store multiple highlights
+        required: true,
+      },
     owner:{type:mongoose.Schema.Types.ObjectId, ref:'users' },
 
     reviews:[{type:mongoose.Schema.Types.ObjectId, ref:'review',default:0},],
