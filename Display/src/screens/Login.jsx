@@ -32,9 +32,9 @@ const Login = () => {
             dispatch(setAuthUser(response.data.user))
 
             const direction=response.data.user.role 
-            direction ==='user' ?  navigate('/'):direction ==='seller'? navigate('/S_Home'):navigate('/A_Home')
+            direction==='user' ?  navigate('/'):direction ==='seller'? navigate('/S_Home'):navigate('/A_Home')
             }
-            redirect('/Register')
+           
         }
         catch(e){
             console.error(e);

@@ -6,7 +6,6 @@ import MainLayout from './screens/MainLayout';
 import Login from './screens/Login';
 import Dashboard from './screens/Dashboard';
 import AllProduct from './screens/AllProduct';
-import ProductFetch from './hooks/ProductFetch';
 import SingleProduct from './screens/SingleProduct';
 
 import Register from './screens/Register'
@@ -14,27 +13,61 @@ import S_CreateOrder from './screens/Seller/S_CreateOrder';
 import Product from './screens/Product';
 import SummerCollections from './screens/collections/SummerCollections';
 import CreateOrder from './screens/CreateOrder';
+import MeetOurTopSellers from './screens/auth/MeetOurTopSellers';
+import Myorder from './screens/Myorder';
+import Middleware from './screens/auth/Middleware';
+import Profile from './screens/Profile'
+import S_Feedback from './screens/Seller/S_Feedback'
+import Feedback from './screens/Feedback'
+import RecivedOrder from './screens/Seller/RecivedOrder';
+import S_Home from './screens/Seller/S_Home';
+import S_SingleProduct from './screens/Seller/S_SingleProduct';
+import EditProduct from './screens/Seller/EditProduct';
+
+import Home from './screens/Admin/Home';
 const browserRouter = createBrowserRouter([
   {
+    
     path: "/",
     element: <MainLayout/>,
+  
     children: [
 
       { path: "/", element:<Dashboard><AllProduct/></Dashboard>},
       { path: "SingleProduct/:id", element: <Dashboard><SingleProduct/></Dashboard> },
-      { path: "/create", element: <Dashboard><S_CreateOrder/></Dashboard> },
       { path: "/product/:id", element: <Dashboard><Product/></Dashboard> },
       { path: "/collections", element: <Dashboard><SummerCollections/></Dashboard> },
       { path: "/checkout", element: <Dashboard><CreateOrder/></Dashboard> },
+      { path: "/Ourteam", element: <Dashboard><MeetOurTopSellers/></Dashboard> },
+      { path: "/myorders", element: <Dashboard><Myorder/></Dashboard> },
+      { path: "/profile", element: <Dashboard><Profile/></Dashboard> },
+      { path: "/sendfeedback", element: <Dashboard><Feedback/></Dashboard> },
+
+
+      //seller routers
+      { path: "/CreateProduct", element: <Dashboard><S_CreateOrder/></Dashboard> },
+      { path: "/userfeedback", element: <Dashboard><S_Feedback/></Dashboard> },
+      { path: "/S_RecivedOrder", element: <Dashboard><RecivedOrder/></Dashboard> },
+      { path: "/S_Home", element: <Dashboard><S_Home/></Dashboard> },
+      { path: "/S_Product/:id", element: <Dashboard><S_SingleProduct/></Dashboard> },
+      { path: "/Edit/:id", element: <Dashboard><EditProduct/></Dashboard> },
+
+
+      //Admin routes
+      { path: "/A_Home", element: <Dashboard><Home/></Dashboard> },
 
 
 
 
+
+
+
+
+      
    
     ],
   },
   { path: "/login", element: <Login /> },
-
   // { path: "/login", element: <Signin /> },
   { path: "/signup", element: <Register /> },
 ]);

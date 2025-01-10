@@ -5,6 +5,8 @@ import bcrypt from 'bcrypt'
 import { blacklist } from '../models/blackList.Token.js';
 import dataURI from '../db/dataURI.js';
 import cloudinary from '../db/cloudnary.js';
+import { Product } from '../models/Product.js';
+import { Order } from '../models/order.js';
 
 
 export async function register(req, res, next) {
@@ -140,15 +142,46 @@ export async function Edit(req, res) {
 
 
 
-export async function suggestedusers(req, res) {
+export async function Get_All_Users(req, res) {
+   const adminID= req.user._id
      
-    try {
-        const S_Users = await User.find({ _id: { $ne: req.user._id } }).select("-password")
-        if (!S_Users) {
-            res.status(400).json({ message: "No suggested users " })
+        try {
+
+        const admin = await User.findById({ _id:adminID }).select("-password")
+        if (!admin) {
+            return res.status(400).json({ message: "Admin not found" });
+        }
+        if(admin.role ==='admin') {
+            const Total_Users = await User.find({ 
+                role: { $nin: ['seller', 'admin'] } 
+              }).select("-password");
+
+              const Total_Product = await Product.find() 
+               
+              const Total_Orders = await Order.find()  
+              const Total_Completed_Orders = await Order.find({ orderStatus:'Delivered'})  
+              const Total_pending_Orders = await Order.find({ orderStatus:'Pending'})  
+              const Total_Cancelled = await Order.find({ orderStatus:'Cancelled'})  
+
+
+
+
+
+             res.status(200).json({message:"All User Fetched ",success:true,Total_Product,Total_Users,Total_Orders,Total_Completed_Orders,Total_pending_Orders,Total_Cancelled})
+
 
         }
-        res.status(200).json(S_Users)
+        else  {
+            return res.status(400).json({ message: "You are not the admin" })
+        }
+            // res.status(400).json({ message: "You are not the admin" })
+
+
+
+        // const S_Users = await User.find({ role: { $ne: 'seller admin' } }).select("-password")
+        // if (!S_Users) {
+
+        // }
 
     }
 
@@ -159,58 +192,110 @@ export async function suggestedusers(req, res) {
 
 }
 
+export async function Get_Top_Sellers(req, res) {
+    const adminID= req.user._id
+      
+         try {
+ 
+         const admin = await User.findById({ _id:adminID }).select("-password")
+         if (!admin) {
+             return res.status(400).json({ message: "Admin not found" });
+         }
+         if(admin.role ==='admin') {
+             const Total_Sellers = await User.find({ 
+                 role:'seller'} 
+               ).select("-password");
+               const minOrders = 10;
+ 
+            //    const Top_Sellers = await User.findOne({ role:'seller'},{sellersorders: { $gte: minOrders }}).select("-password");
+            const Top_Sellers = await User.find(
+                {
+                  role: 'seller',
+                  $expr: { $gte: [{ $size: "$sellersorders" }, minOrders] }
+                },
+                { password: 0 } // Exclude the password field
+              );
+
+            
+              res.status(200).json({message:"All sellers Fetched ",success:true,Top_Sellers,Total_Sellers})
+ 
+ 
+         }
+         else  {
+             return res.status(400).json({ message: "You are not the admin" })
+         }
+             // res.status(400).json({ message: "You are not the admin" })
+ 
+ 
+ 
+         // const S_Users = await User.find({ role: { $ne: 'seller admin' } }).select("-password")
+         // if (!S_Users) {
+ 
+         // }
+ 
+     }
+ 
+     catch (err) {
+         console.log(err)
+         return res.status(500).json({ message: 'Server error' });
+     }
+ 
+ }
 
 
-export async function follow_un_follow(req, res) {
 
 
-    const jis_ko_follw_krna_hai= req.body.id 
-    const jo_follow_kryga = req.user.id
+
+// export async function follow_un_follow(req, res) {
 
 
-    try {
+//     const jis_ko_follw_krna_hai= req.body.id 
+//     const jo_follow_kryga = req.user.id
+
+
+//     try {
         
-        if (jis_ko_follw_krna_hai===jo_follow_kryga) {
-            res.status(400).json({ message: "cant follow yourself " })
-        }
+//         if (jis_ko_follw_krna_hai===jo_follow_kryga) {
+//             res.status(400).json({ message: "cant follow yourself " })
+//         }
 
-        const user  = await User.findById({_id:jo_follow_kryga})
-        const tagget_user = await User.findById({_id:jis_ko_follw_krna_hai})
+//         const user  = await User.findById({_id:jo_follow_kryga})
+//         const tagget_user = await User.findById({_id:jis_ko_follw_krna_hai})
 
-        if(!user||!tagget_user){
-            res.status(400).json({ message: "not found user to follow  " })
-        }
+//         if(!user||!tagget_user){
+//             res.status(400).json({ message: "not found user to follow  " })
+//         }
 
-        const id_followig=user.following.includes(jis_ko_follw_krna_hai)
+//         const id_followig=user.following.includes(jis_ko_follw_krna_hai)
 
-        if(id_followig){
-            // unfollow ka logic 
-            // user.following=user.following.filter(id=>id!==jis_ko_follw_krna_hai)
-            // tagget_user.followers=tagget_user.followers.filter(id=>id!==jo_follow_kryga)
+//         if(id_followig){
+//             // unfollow ka logic 
+//             // user.following=user.following.filter(id=>id!==jis_ko_follw_krna_hai)
+//             // tagget_user.followers=tagget_user.followers.filter(id=>id!==jo_follow_kryga)
 
-            await Promise.all([
-                User.updateOne({_id:jo_follow_kryga},{$pull:{following:jis_ko_follw_krna_hai}}),
-                User.updateOne({_id:jis_ko_follw_krna_hai},{$pull:{followers:jo_follow_kryga}})
-            ])
-        }else{
-            // follow ka logic
+//             await Promise.all([
+//                 User.updateOne({_id:jo_follow_kryga},{$pull:{following:jis_ko_follw_krna_hai}}),
+//                 User.updateOne({_id:jis_ko_follw_krna_hai},{$pull:{followers:jo_follow_kryga}})
+//             ])
+//         }else{
+//             // follow ka logic
 
-            await Promise.all([
-                User.updateOne({_id:jo_follow_kryga},{$push:{following:jis_ko_follw_krna_hai}}),
-                User.updateOne({_id:jis_ko_follw_krna_hai},{$push:{followers:jo_follow_kryga}})
-            ])
+//             await Promise.all([
+//                 User.updateOne({_id:jo_follow_kryga},{$push:{following:jis_ko_follw_krna_hai}}),
+//                 User.updateOne({_id:jis_ko_follw_krna_hai},{$push:{followers:jo_follow_kryga}})
+//             ])
 
-        }
-        res.status(200).json({
-            message: "follow/unfollow user successfully",
-            user
-        })
-    }
+//         }
+//         res.status(200).json({
+//             message: "follow/unfollow user successfully",
+//             user
+//         })
+//     }
 
-    catch (err) {
-        console.log(err)
-        return res.status(500).json({ message: 'Server error' });
-    }
+//     catch (err) {
+//         console.log(err)
+//         return res.status(500).json({ message: 'Server error' });
+//     }
 
-}
+// }
 

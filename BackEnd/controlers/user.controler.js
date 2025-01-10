@@ -343,13 +343,13 @@ export async function place_order(req, res) {
                 const newOrder = {
                     customerId: userID,
                     sellerId: owner_from_user._id,
-                    products: [
+                    products:
                         {
                             productId: owner_from_product._id,
                             quantity: p_id_from_cart.quantity,
                             price: getprice.productprice
-                        }
-                    ],
+                        },
+                    
                     totalAmount: Number(p_id_from_cart.quantity) * Number(getprice.productprice),
                     orderStatus: 'Pending',
                     shippingAddress: {
@@ -372,7 +372,7 @@ export async function place_order(req, res) {
         await user.updateOne({ $set: { Cart: [] } });
 
         // Send a single response after processing all cart items
-        res.status(200).json({
+        res.status(200).json({   
             message: "Order created successfully",
             success: true
         });

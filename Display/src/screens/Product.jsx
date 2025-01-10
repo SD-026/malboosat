@@ -17,8 +17,8 @@ const products = {
   price: '$192',
   href: '#',
   breadcrumbs: [
-    { id: 1, name: 'Men', href: '#' },
-    { id: 2, name: 'Clothing', href: '#' },
+    // { id: 1, name: '', href: '#' },
+    { id: 2, name: 'Product', href: '/' },
   ],
   images: [
     {
@@ -348,7 +348,7 @@ useEffect(() => {
 
               <div className="mt-4">
                 <ul role="list" className="list-disc space-y-2 pl-4 text-sm">
-                  {products?.highlights.map((highlight) => (
+                  {product?.highlights.map((highlight) => (
                     <li key={highlight} className="text-gray-400">
                       <span className="text-gray-600">{highlight}</span>
                     </li>

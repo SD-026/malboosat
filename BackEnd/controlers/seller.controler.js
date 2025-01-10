@@ -8,6 +8,7 @@ import cloudinary from '../db/cloudnary.js';
 import { Product } from '../models/Product.js';
 import { Order } from '../models/order.js';
 import sharp from 'sharp';
+import { model } from 'mongoose';
 
 
 export async function register(req, res, next) {
@@ -219,7 +220,7 @@ export async function follow_un_follow(req, res) {
 }
 
 export async function New_Product(req, res, next) {
-    const { productname, productdescribtion, productprice } = req.body;
+    const { productname, productdescribtion, productprice, highlights } = req.body; // Destructure highlights
     const userID = req.user._id;
     const images = req.files; // Array of uploaded images
 
@@ -233,7 +234,7 @@ export async function New_Product(req, res, next) {
             images.map(async (image) => {
                 const optimizedImage = await sharp(image.buffer)
                     .resize({ width: 800, height: 800, fit: 'inside' })
-                    .toFormat('jpeg', { quality: 80 })
+                    .toFormat('jpeg', { quality: 60 })
                     .toBuffer();
 
                 const fileUri = `data:image/jpeg;base64,${optimizedImage.toString('base64')}`;
@@ -249,6 +250,7 @@ export async function New_Product(req, res, next) {
             productprice,
             owner: userID,
             P_images: uploadedImages, // Store array of image URLs
+            highlights: highlights || [], // Store highlights (empty array if none)
         };
 
         // Save product to database
@@ -285,54 +287,114 @@ export async function New_Product(req, res, next) {
         }
     }
 
-    export async function editproduct(req, res, next) {
-        const {userID, productID,productname,productdescribtion,productprice,owner} = req.body
-        // const P_image =req.file
-        try {
-            const seller = await User.findByID({_id:userID})
+    // export async function editproduct(req, res, next) {
+    //     const {userID, productID,productname,productdescribtion,productprice,owner} = req.body
+    //     // const P_image =req.file
+    //     try {
+    //         const seller = await User.findByID({_id:userID})
 
-            if (seller&& (seller.role==='seller'||seller.role==='admin')){
-            const product  = await Product.findByID({_id:productID})
-            // if (P_image) {
-            //     try {
-            //         const fileuri = dataURI(profilePic);
-            //         cloudResponse = await cloudinary.uploader.upload(fileuri);
-            //     } catch (error) {
-            //         console.error("Error uploading to Cloudinary:", error);
-            //         return res.status(500).json({ message: "Failed to upload profile picture" });
-            //     }
-            // }
+    //         if (seller&& (seller.role==='seller'||seller.role==='admin')){
+    //         const product  = await Product.findByID({_id:productID})
+    //         // if (P_image) {
+    //         //     try {
+    //         //         const fileuri = dataURI(profilePic);
+    //         //         cloudResponse = await cloudinary.uploader.upload(fileuri);
+    //         //     } catch (error) {
+    //         //         console.error("Error uploading to Cloudinary:", error);
+    //         //         return res.status(500).json({ message: "Failed to upload profile picture" });
+    //         //     }
+    //         // }
 
-            if(!product) return res.status(400).json({message:'product not found'})
+    //         if(!product) return res.status(400).json({message:'product not found'})
           
 
-                if (productname) product.productname = productname;
-                if (productdescribtion) product.productdescribtion = productdescribtion;
-                if (productprice) product.productprice = productprice;
-            //   if (P_image && cloudResponse) product.P_image = cloudResponse.secure_url;
+    //             if (productname) product.productname = productname;
+    //             if (productdescribtion) product.productdescribtion = productdescribtion;
+    //             if (productprice) product.productprice = productprice;
+    //         //   if (P_image && cloudResponse) product.P_image = cloudResponse.secure_url;
 
-                // if (image) product.image = image;
-                await product.save()
-                res.status(200).json({message:'product updated successfully',product})
+    //             // if (image) product.image = image;
+    //             await product.save()
+    //             res.status(200).json({message:'product updated successfully',product})
                
-            }
+    //         }
 
             
-            res.status(200).json({
-                message: "user is not seller",
-                success: false
-            })
-        } catch (err) {
-            console.log(err)
-            return res.status(500).json({ message: 'Server error' });
+    //         res.status(200).json({
+    //             message: "user is not seller",
+    //             success: false
+    //         })
+    //     } catch (err) {
+    //         console.log(err)
+    //         return res.status(500).json({ message: 'Server error' });
+    //     }
+    // }
+
+    export async function editProduct(req, res, next) {
+        const { productname, productdescribtion, productprice, highlights } = req.body;
+        // const productID = req.params.productID;              
+        const { id } = req.params;
+
+        const userID = req.user._id;
+        const images = req.files; // Array of uploaded images (if any)
+
+
+    
+        try {
+            const seller = await User.findById({_id:userID});
+            
+    
+            if (!seller || (seller.role !== 'seller' && seller.role !== 'admin')) {
+                return res.status(403).json({ message: 'User is not authorized to edit product' });
+            }
+    
+            const product = await Product.findById(id);
+    
+            if (!product) {
+                return res.status(404).json({ message: 'Product not found', success:false });
+            }
+    
+            // If new images are uploaded, optimize and upload them to Cloudinary
+            if (images && images.length > 0) {
+                const uploadedImages = await Promise.all(
+                    images.map(async (image) => {
+                        const optimizedImage = await sharp(image.buffer)
+                            .resize({ width: 800, height: 800, fit: 'inside' })
+                            .toFormat('jpeg', { quality: 60 })
+                            .toBuffer();
+    
+                        const fileUri = `data:image/jpeg;base64,${optimizedImage.toString('base64')}`;
+                        const result = await cloudinary.uploader.upload(fileUri);
+                        return result.secure_url;
+                    })
+                );
+    
+                product.P_images = uploadedImages; // Update product images
+            }
+    
+            // Update other product fields if provided
+            if (productname) product.productname = productname;
+            if (productdescribtion) product.productdescribtion = productdescribtion;
+            if (productprice) product.productprice = productprice;
+            if (highlights) product.highlights = highlights;
+    
+            await product.save();
+    
+            res.status(200).json({ message: 'Product updated successfully', product,success: true });
+        } catch (error) {
+            console.error('Error editing product:', error);
+            res.status(500).json({ message: 'Internal Server Error', error: error.message });
         }
     }
+    
 
 
 
     
     export async function delete_product(req, res, next) {
-        const {userID, productID} = req.body
+        const { id } = req.params;
+
+        const userID = req.user._id;
         try {
             const seller = await User.findByID({_id:userID})
 
@@ -343,10 +405,13 @@ export async function New_Product(req, res, next) {
 
                 res.status(200).json({message:'product deleted successfully',product,success:true})
             }
+            else{
             res.status(200).json({
                 message: "user is not seller",
                 success: false
-            })
+            })}
+           
+            
         }
         catch (err) {
             console.log(err)
@@ -358,17 +423,20 @@ export async function New_Product(req, res, next) {
 
     // get_sellersproduct
     export async function get_sellersproduct(req, res, next) {
-        const {userID} = req.body
+        const userID = req.user._id
+        // console.log('get_sellersproduct', userID)
         try {
             const seller = await User.findById({_id:userID})
+
             if(seller&&(seller.role==='seller'||seller.role==='admin')){
                 const products = await Product.find({owner:userID})
                 res.status(200).json({products,messages:"sellers products fetched successfully",success:true})
             }
+            else{
             res.status(200).json({
                 message: "user is not seller",
                 success: false
-            })
+            })}
         }
         catch (err) {
             console.log(err)
@@ -378,10 +446,13 @@ export async function New_Product(req, res, next) {
 
     
     export async function updateOrderStatus(req, res, next) {
+
         const {orderID, status} = req.body
+        console.log(status)
         try {   
-            const order = await Order.findByIdAndUpdate({_id:orderID}, {status: status})
+            const order = await Order.findByIdAndUpdate({_id:orderID},{orderStatus: status})
             if(!order) return res.status(400).json({message:'order not found'})
+
             res.status(200).json({message:'order status updated successfully',order,success:true})
         } catch (err) {
             console.log(err)
@@ -390,18 +461,25 @@ export async function New_Product(req, res, next) {
     }
 
     export async function getOrderHistory(req, res, next) {
-        const {userID} = req.body
+        const userID = req.user._id
         try {
-            const user = await User.findById({_id:userID})
+            const user = await User.findById({_id:userID}).select('role custmuerorders sellersorders')
             // console.log(user)
 
             if(user&&(user.role==='seller'||user.role==='admin')){
-                const orders=await user.populate({path:'sellersorders',model: 'Order'})
+                const orders=await user.populate({path:'sellersorders',model: 'Order',populete:{path:'customerId',model:'users',select:'username profilePic role email'},populate:{path:'products.productId' ,model:'product'}})
+
+                // const orders=await user.populate({path:'sellersorders',model: 'Order'})
                 res.status(200).json({orders,messages:"sellers order history fetched successfully",success:true})
             }
             else{
-                const orders=await user.populate({path:'custmuerorders',model: 'Order'})
-                res.status(200).json({orders,messages:"sellers order history fetched successfully",success:true})
+                const orders=await user.populate({path:'custmuerorders',model: 'Order',populate:{path:'products.productId' ,model:'product'},populete:{path:'sellerId',model:'users',select:'username profilePic role ratting'}})
+                res.status(200).json({orders,messages:"customer order history fetched successfully",success:true})
+
+//                 const post = await Post.find({author:userID}).sort({createdAt:-1})
+//     .populate({path:'author',select:('username profilePic _id')})  //outer populate  
+//     .populate({path:'comments',sort:({createdAt:-1}),populate:{path:'author', select:'username profilePic _id'} //inner populate 
+// })
             }
             
         }

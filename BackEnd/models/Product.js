@@ -25,6 +25,9 @@ const productShema=new mongoose.Schema({
         type: [String], // Array of strings to store multiple highlights
         required: true,
       },
+        // colors:{
+
+        // },
     owner:{type:mongoose.Schema.Types.ObjectId, ref:'users' },
 
     reviews:[{type:mongoose.Schema.Types.ObjectId, ref:'review',default:0},],

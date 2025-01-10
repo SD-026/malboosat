@@ -16,59 +16,7 @@ const AllProduct = () => {
 
   
   
-  const products = [
-    {
-      id: 1,
-      name: 'Basic Tee',
- 
-      imageSrc: 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg',
-      imageAlt: "Front of men's Basic Tee in black.",
-      price: '$35',
-      color: 'Black',
-    },
-    {
-      id: 2,
-      name: 'Basic Tee',
-      href: '#',
-      imageSrc: 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg',
-      imageAlt: "Front of men's Basic Tee in black.",
-      price: '$35',
-      color: 'Black',
-    },   {
-      id: 3,
-      name: 'Basic Tee',
-      href: '#',
-      imageSrc: 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg',
-      imageAlt: "Front of men's Basic Tee in black.",
-      price: '$35',
-      color: 'Black',
-    },   {
-      id: 1,
-      name: 'Basic Tee',
-      href: '#',
-      imageSrc: 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg',
-      imageAlt: "Front of men's Basic Tee in black.",
-      price: '$35',
-      color: 'Black',
-    },   {
-      id: 1,
-      name: 'Basic Tee',
-   
-      imageSrc: 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg',
-      imageAlt: "Front of men's Basic Tee in black.",
-      price: '$35',
-      color: 'Black',
-    },   {
-      id: 1,
-      name: 'Basic Tee',
-    
-      imageSrc: 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg',
-      imageAlt: "Front of men's Basic Tee in black.",
-      price: '$35',
-      color: 'Black',
-    },
-   
-  ]
+  
 
 
   // useEffect(() => {
@@ -120,13 +68,13 @@ const AllProduct = () => {
                           {product.productname}
                         </a>
                       </h3>
-                      <p className="mt-1 text-sm text-gray-500">{product.color}</p>
+                      {/* <p className="mt-1 text-sm text-gray-500">{product.color}</p> */}
                     </div>
                     <div className=" justify-between">
                       
-                    <p className="text-sm font-medium text-gray-900">${product.price}</p>
+                    <p className="text-sm font-medium text-gray-900">Rs: {product?.productprice}</p>
 
-                    <p className="text-sm font-medium text-gray-900">${product.sellername}</p>
+                    <p className="text-sm font-medium text-gray-900">{product?.sellername}</p>
 
 
                     </div>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { Link, Navigate } from 'react-router-dom'
+import { Link,useNavigate,redirect } from 'react-router-dom'
 import axios from 'axios';
+import { useSelector } from 'react-redux';
 // import Login form '..'
 
 
@@ -8,44 +9,54 @@ import axios from 'axios';
 const Middleware = ({ children, required_role }) => {
   const token = localStorage.getItem('token');
   const [logedin_role, setloginrole] = useState()
+  const {user}=useSelector(store=>store.auth)
+  const navigate=useNavigate()
+
   // console.log(token)
 
 
-  useEffect(() => {
-    const fetch = async () => {
+  // useEffect(() => {
+  //   const fetch = async () => {
 
-      try {
-        const response = await axios.get(`http://localhost:5555/api/getId`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
+  //     try {
+  //       const response = await axios.get(`http://localhost:5555/api/getId`, {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       })
+  //       setloginrole(response.data.role)
+  //       // console.log("sheeraxz", response.data.role)
+  //     }
+  //     catch (e) {
+  //       console.error(e);
+  //     }
+  //   }
+  //   fetch()
 
-        setloginrole(response.data.role)
-        // console.log("sheeraxz", response.data.role)
-
-
-      }
-      catch (e) {
-        console.error(e);
-      }
-    }
-    fetch()
-
-  }, []);
+  // }, []);
   // const logedin_role="user"
 
-  if (required_role===logedin_role) {
+  // console.log(user.role)
+  // useEffect(()=>{
+  //   if(!user){
+  //     navigate('/login')
+  //   }
+
+  // },[])
+
+  
+  if (required_role===user?.role) {
     return children
   }
-  else {
-    return <div>
-      Fuck Off bro and have a login 
-      <Link to={'/login'}>
-         Create Acc and login</Link>
-    </div>
+ 
+    // <div>
+      
+    //   Fuck Off bro and have a login 
+    //   <Link to={'/login'}>
+    //      Create Acc and login</Link>
+    // </div>
 
-  }
+  
 }
 
 export default Middleware

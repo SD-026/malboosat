@@ -48,7 +48,8 @@ const userShema=new mongoose.Schema({
     custmuerorders:[{type:mongoose.Schema.Types.ObjectId, ref:'Order'}],
     Cart:[{type:mongoose.Schema.Types.ObjectId,ref:'Cart' }],
     sellersorders:[{type:mongoose.Schema.Types.ObjectId, ref:'Order'}],
-    products:[{type:mongoose.Schema.Types.ObjectId,ref:'product'}]
+    products:[{type:mongoose.Schema.Types.ObjectId,ref:'product'}],
+    rating:[{type:mongoose.Schema.Types.ObjectId,ref:'users'}]
 
     // :[{type:mongoose.Schema.Types.ObjectId, ref:'Post'}],
     // bookmark:[{type:mongoose.Schema.Types.ObjectId, ref:'Post'}]

@@ -6,6 +6,8 @@ import router from './routes/user.routes.js'
 import cookieParser from "cookie-parser";
 import sellerrouter from './routes/seller.routes.js'
 import product from './routes/product.routes.js'
+import admin from './routes/admin.routes.js'
+
 import { app,server } from "./socket/socket.js";
 import dotenv from 'dotenv'
 
@@ -26,7 +28,7 @@ app.use('/user', router)
 app.use('/seller', sellerrouter)
 app.use('/product', product)
 
-// app.use('/post',postRoutes )
+app.use('/admin',admin )
 // app.use('/msg',msgRoutes)
 
 

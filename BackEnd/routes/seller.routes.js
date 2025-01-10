@@ -25,13 +25,16 @@ router.post('/edit',AuthUser,upload.single('profilePic'),sellerControler.Edit)
 
 
 router.post('/New_Product', upload.array('images', 5), AuthUser, sellerControler.New_Product);
-router.post('/editproduct',AuthUser,sellerControler.editproduct)
-router.post('/deleteproduct',AuthUser,sellerControler.delete_product)
+
+router.post('/editproduct/:id',upload.array('images', 5),AuthUser,sellerControler.editProduct)
+
+router.delete('/deleteproduct',AuthUser,sellerControler.delete_product)
+
 router.post('/updatestatus',AuthUser,sellerControler.updateOrderStatus)
 
 router.get('/getsellersproduct',AuthUser,sellerControler.get_sellersproduct)
 router.get('/getorderhistory',AuthUser,sellerControler.getOrderHistory)
-
+    
 
 
 

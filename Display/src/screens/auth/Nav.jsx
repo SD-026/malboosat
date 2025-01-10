@@ -2,44 +2,29 @@ import { FaHome, FaBars, FaUserFriends } from "react-icons/fa";
 import { CiHeart } from "react-icons/ci";
 import { IoMdHelpCircleOutline } from "react-icons/io";
 import { MdOutlineFeedback } from "react-icons/md";
+import { useSelector } from 'react-redux';
+import { VscGitPullRequestCreate } from "react-icons/vsc";
+import { FcAssistant } from "react-icons/fc";
+import { FcAddImage } from "react-icons/fc";
+import { FcHome } from "react-icons/fc";
+
+import { FcInternal } from "react-icons/fc";
 
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Nav = ({toggleDrawer, children }) => {
     const token = localStorage.getItem('token');
+    const {user}=useSelector(store=>store.auth)
     // const [newuser,setloginrole] =useState()
-    const newuser='user';
+   
     const navigate=useNavigate()  
-    // const newuser='seller'
+    // const user.role='seller'
     const drawer =true
-
-    // useEffect(() => {
-    //     const fetch = async () => {
-         
-    //       try{
-    //           const response = await axios.get(`http://localhost:5555/api/getId`,{
-    //             headers: {
-    //              Authorization: `Bearer ${token}`,
-    //          }, 
-    //         })
-    
-    //         setloginrole(response.data.role)
-    //         //   console.log("sheeraxz",response.data.role)
-    
-              
-    //       }
-    //       catch(e){
-    //           console.error(e);
-    //       }
-    //   }
-    //   fetch()
-    
-    //   }, [onload,token,newuser]);
   return (
     <>
-    {/* {} */}
-        { newuser ==='admin' ? (
+    
+        { user?.role ==='admin' ? (
         
         <div className="flex  ">
             {/* <div className={`fixed top-0 left-0 h-full pl-3 ${drawer ?'w-64':'hidden'} bg-white text-black font-semibold z-40`}> */}
@@ -86,18 +71,6 @@ const Nav = ({toggleDrawer, children }) => {
                     <MdOutlineFeedback className="text-3xl cursor-pointer" />
                     <p className='pl-2'>TotalOrders</p>
                 </div>
-                {/* <div className="p-2 flex cursor-pointer hover:bg-gray-200" onClick={()=>navigate('/Notification')}>
-                    <MdOutlineFeedback className="text-3xl cursor-pointer" />
-                    <p className='pl-2'>Notification</p>
-                </div>
-                <div className="p-2 flex cursor-pointer hover:bg-gray-200" onClick={()=>navigate('/CreatePost')}>
-                    <MdOutlineFeedback className="text-3xl cursor-pointer" />
-                    <p className='pl-2'>Create</p>
-                </div>
-                <div className="p-2 flex cursor-pointer hover:bg-gray-200" onClick={()=>navigate('/Profile')}>
-                    <MdOutlineFeedback className="text-3xl cursor-pointer" />
-                    <p className='pl-2'>Profile</p>
-                </div> */}
 
             </div>
             <div className="   p-2 flex cursor-pointer hover:bg-gray-200" onClick={()=>navigate('/GetFeedBack')}>
@@ -109,29 +82,34 @@ const Nav = ({toggleDrawer, children }) => {
                 {children}
             </div>
         </div>
-        ):newuser==='seller'?(<div className="flex">
+        ):user?.role==='seller'?(<div className="flex">
             <div className={`fixed top-0 left-0 h-full pl-3 bg-white overflow-hidden text-black font-semibold z-40`}>
                 <div className="p-4 flex">
-                    <div className="block mt-2">
+                    {/* <div className="block mt-2">
                         <FaBars className="text-[#FF3F3E] text-3xl cursor-pointer" onClick={toggleDrawer} />
-                    </div>
+                    </div> */}
                     {/* <img alt="Logo" className="w-12 h-12" /> */}
                 </div>
                 <div className={`${drawer ?'w-64':'hidden'}`}>
 
                 <div className="p-2 flex cursor-pointer hover:bg-gray-200" onClick={()=>navigate('/S_Home')}>
-                    <FaHome className="text-3xl cursor-pointer" />
+                    <FcHome className="text-3xl cursor-pointer" />
                     <p className={`pl-2`}>Home</p>
+                </div>
+                <div className="p-2 flex cursor-pointer hover:bg-gray-200" onClick={()=>navigate('/CreateProduct')}>
+                    <FcAddImage className="text-3xl cursor-pointer" />
+                    <p className='pl-2'>Create Product</p>
                 </div>
 
                 <div className="p-2 flex cursor-pointer hover:bg-gray-200" onClick={()=>navigate('/S_RecivedOrder')}>
-                    <div className='w-6 h-6 bg-[#D9D9D9] rounded-full' />
-                    <p className='pl-2'>S_RecivedOrder</p>
+                    {/* <div className='w-6 h-6 bg-[#D9D9D9] rounded-full' /> */}
+                    <FcInternal className="text-black text-3xl cursor-pointer"/>
+                    <p className='pl-2'>Recived Order</p>
                 </div>
 
-                <div className="p-2 flex cursor-pointer hover:bg-gray-200" onClick={()=>navigate('/S_Feedback')}>
-                    <CiHeart className="text-black text-3xl cursor-pointer" />
-                    <p className='pl-2'>S_Feedback </p>
+                <div className="p-2 flex cursor-pointer hover:bg-gray-200" onClick={()=>navigate('/userFeedback')}>
+                    <FcAssistant className="text-black text-3xl cursor-pointer" />
+                    <p className='pl-2'>Feedback </p>
                 </div>
 
                 {/* <div className="p-2 flex cursor-pointer hover:bg-gray-200">
@@ -144,21 +122,18 @@ const Nav = ({toggleDrawer, children }) => {
                     <p className='pl-2'>Groups</p>
                 </div> */}
 
-                <div className="p-2 flex cursor-pointer hover:bg-gray-200" onClick={()=>navigate('/S_CreateOrder')}>
-                    <IoMdHelpCircleOutline className="text-3xl cursor-pointer" />
-                    <p className='pl-2'>S_CreateOrder</p>
-                </div>
+                
 
-                <div className="p-2 flex cursor-pointer hover:bg-gray-200" onClick={()=>navigate('/Feedback')}>
+                {/* <div className="p-2 flex cursor-pointer hover:bg-gray-200" onClick={()=>navigate('/userFeedback')}>
                     <MdOutlineFeedback className="text-3xl cursor-pointer" />
-                    <p className='pl-2'>Send Feedback</p>
-                </div>
+                    <p className='pl-2'>Recived Feedback</p>
+                </div> */}
                 </div>
             </div>
             <div className="ml-64 w-full ">
                 {children}
             </div>
-        </div>): newuser==='user'||newuser===''||newuser===undefined ? (<div className=" w-full">
+        </div>): user?.role==='user'||user?.role===''||user?.role===undefined ? (<div className=" w-full">
                 {children}
             </div>):""
         }

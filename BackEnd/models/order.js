@@ -12,7 +12,7 @@ const orderSchema = new Schema({
     ref: 'users',
     required: true
   },
-  products: [
+  products: 
     {
       productId: {
         type: mongoose.Schema.Types.ObjectId,
@@ -29,7 +29,7 @@ const orderSchema = new Schema({
         required: true
       }
     }
-  ],
+  ,
   totalAmount: {
     type: Number,
     required: true

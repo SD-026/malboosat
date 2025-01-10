@@ -9,12 +9,17 @@ import { useNavigate } from 'react-router-dom';
 import ProductFetch from '../hooks/ProductFetch';
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import logo from '../assets/Z_logo.png'
+import { current } from '@reduxjs/toolkit';
+import { useDispatch, useSelector } from 'react-redux';
+import { setAuthUser } from '../redux/authSlice';
 
 const navigation = [
-  { name: 'Dashboard', href: '#', current: true },
-  { name: 'Team', href: '#', current: false },
-  { name: 'Projects', href: '#', current: false },
-  { name: 'Calendar', href: '#', current: false },]
+  { name: 'Home', href: '/', current: true },
+  { name: 'Team', href: 'Ourteam', current: false },
+  { name: 'Our Collectios', href: 'collections', current: false },
+  { name: 'My Orders', href: 'myorders', current: false },
+]
 
   function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
@@ -23,46 +28,23 @@ const Dashboard = ({children}) => {
   
 
   const [Open, setOpened] = useState(false)
-  const [data, setData] = useState([])
+  const [data, setData] = useState([])  
   const navigate=useNavigate()
   const token = localStorage.getItem('token');
+  const dispatch=useDispatch()
+  const [currented, setCurrent] = useState({
+    name:'',
+    currentpage:false
+  })
+  const {user}=useSelector(store=>store.auth)
 
+  const signOut=()=>{
+    
+    localStorage.removeItem('token')
+    dispatch(setAuthUser(null))
+    
 
-
-
-  // useEffect(() => {
-   
-  //   const fetchProduct = async () => {
-
-   
-  //     //  const userID='66f5a05817ea4470b8740f61'
-      
-      
-  //     try {
-  //     const response = await axios.get(`http://localhost:5555/api/cartitem`,{
-  //       headers: {
-  //        Authorization: `Bearer ${token}`,
-  //    },
-  //   });
-  //     // console.log(response)
-
-
-        
-  //       setData(response.data.totalitems); // Assuming single product comes in the "singleproduct" field
-  //       // setLoading(false); // Turn off loading
-  //     } catch (error) {
-  //       console.error(error);
-  //       // setError('Failed to load product');
-  //       // setLoading(false);
-  //     }
-  //   };
-  //   fetchProduct();
-  // }, [Open,token]);
-
-
-  const logout=()=>{
-    localStorage.clear()
-    navigate('/login')
+    navigate('/')
   }
 
 
@@ -85,20 +67,25 @@ const Dashboard = ({children}) => {
           <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
             <div className="flex shrink-0 items-center">
               <img
-                alt="Your Company"
-                src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=500"
-                className="h-8 w-auto"
+                alt="Malosaat"
+                src={logo}
+                className="h-8  rounded-full w-auto"
               />
+              {/* <h2 className='text-base font-semibold text-gray-500'>Malboosat</h2> */}
             </div>
             <div className="hidden sm:ml-6 sm:block">
               <div className="flex space-x-4">
                 {navigation.map((item) => (
                   <a
                     key={item.name}
-                    href={item.href}
-                    aria-current={item.current ? 'page' : undefined}
+                    // href={item.href}
+                    onClick={()=>{
+                      navigate(`/${item.href}`)
+                      setCurrent({name:item.name,currentpage: true})
+                    }}
+                    aria-current={currented.name===item.name&&currented.currentpage===true ? 'page' : undefined}
                     className={classNames(
-                      item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                     currented.name===item.name&&currented.currentpage===true? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
                       'rounded-md px-3 py-2 text-sm font-medium',
                     )}
                   >
@@ -118,18 +105,20 @@ const Dashboard = ({children}) => {
             >
               <span className="absolute -inset-1.5" />
               <span className="sr-only">View notifications</span>
-              <BellIcon aria-hidden="true" className="size-6"  />
+              <TiShoppingCart aria-hidden="true" className="size-6"  />
             </button>
 
             {/* Profile dropdown */}
+
             <Menu as="div" className="relative ml-3">
+              {user ?(<>
               <div>
                 <MenuButton className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                   <span className="absolute -inset-1.5" />
                   <span className="sr-only">Open user menu</span>
                   <img
                     alt=""
-                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                    src={user?.profilePic}
                     className="size-8 rounded-full"
                   />
                 </MenuButton>
@@ -139,31 +128,47 @@ const Dashboard = ({children}) => {
                 transition
                 className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
               >
+                
                 <MenuItem >
                   <a
-                    href="#"
+                  onClick={()=>{
+                    navigate('/profile')
+                  }}
                     className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:outline-none"
                   >
                     Your Profile
                   </a>
                 </MenuItem>
+               
                 <MenuItem>
                   <a
-                    href="#"
+                    // href="#"
                     className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:outline-none"
-                  >
-                    Settings
-                  </a>
-                </MenuItem>
-                <MenuItem>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:outline-none"
+                    onClick={()=>{
+                      signOut()
+                    }}
                   >
                     Sign out
                   </a>
                 </MenuItem>
-              </MenuItems>
+              </MenuItems></>):(
+                 <button
+                 type="button"
+                 onClick={()=>{
+                  //  setOpened(!Open)
+                  navigate('/login')
+                 }}
+                 className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+               >
+                 <span className="absolute -inset-1.5" />
+                 <span className="sr-only">View notifications</span>
+                 {/* <TiShoppingCart aria-hidden="true" className="size-6"  /> */}
+                 <h2>
+                  Login
+                 </h2>
+               </button>  
+                
+              )}
             </Menu>
           </div>
         </div>
@@ -192,7 +197,13 @@ const Dashboard = ({children}) => {
 
 
 
+<div
+// className={`${user?.role==='seller'||'admin'?'ml-64':''}`}
+>
+
    {children}
+
+   </div>
 
    {Open && <Cart setOpen={()=>setOpened(false)}/>}
 

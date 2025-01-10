@@ -35,6 +35,8 @@ function CreateOrder() {
           Authorization: `Bearer ${token}`,
         },
       });
+      // setFormData('')
+
 
      console.log(response?.data);
     } catch (error) {
@@ -73,16 +75,19 @@ function CreateOrder() {
 
     );
     if(delta===+1){
+      console.log("plue")
       
 
       const predata = { P_id:id,quantity: "plus" };
       // console.log(id)
     try {
-      await axios.post(`http://localhost:1020/user/updatecart`, predata, {
+      const res =await axios.post(`http://localhost:1020/user/updatecart`, predata, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
+      console.log(res)
+
     } catch (error) {
       console.error(error);
     }finally{
@@ -151,27 +156,27 @@ function CreateOrder() {
                   className="h-20 w-20 rounded-lg object-cover mr-4"
                 />
                 <div>
-                  <h3 className="text-lg font-medium text-gray-900">{product.productname}</h3>
-                  <p className="text-sm text-gray-500">${product.Cartproduct.productprice}</p>
+                  <h3 className="text-lg font-medium text-gray-900">{product?.productname}</h3>
+                  <p className="text-sm text-gray-500">${product?.Cartproduct?.productprice}</p>
                 </div>
               </div>
 
               <div className="flex items-center space-x-4">
                 <button
-                  onClick={() => updateQuantity(product.Cartproduct._id, -1)}
+                  onClick={() => updateQuantity(product?.Cartproduct?._id, -1)}
                   className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300"
                 >
                   -
                 </button>
-                <span className="text-lg font-medium">{product.quantity}</span>
+                <span className="text-lg font-medium">{product?.quantity}</span>
                 <button
-                  onClick={() => updateQuantity(product.Cartproduct._id, 1)}
+                  onClick={() => updateQuantity(product?.Cartproduct?._id, +1)}
                   className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300"
                 >
                   +
                 </button>
                 <button
-                  onClick={() => remove(product.Cartproduct._id)}
+                  onClick={() => remove(product?.Cartproduct?._id)}
                   className="text-red-600 hover:text-red-800"
                 >
                   Remove
