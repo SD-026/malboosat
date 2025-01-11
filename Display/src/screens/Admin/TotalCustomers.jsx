@@ -1,69 +1,110 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import CustomerModel from './models/CustomerModel';
 
 function TotalCustomers() {
-  // Sample seller data
-  const [sellers, setSellers] = useState([]);
-  
+  const [totalUser, setTotalUser] = useState([]);
   const token = localStorage.getItem('token');
+    const [customermodel, setCustomermodel] = useState(false)
+    const [customerdata, setCustomerdata] = useState([])
+  
 
-  const fetchOrders = async () => {
+
+
+  const fetchDetails = async () => {
     try {
-      const response = await axios.get(`http://localhost:5555/admin/totalsellers`, {
+      const res = await axios.get('http://localhost:1020/admin/allusers', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log("sheeraz lool",response.data.totalsellers)
-      setSellers(response.data.totalsellers)
-     
-    } catch (e) {
-      console.error(e);
+ 
+      if(res.data.success) {
+      setTotalUser(res.data.Total_Users)
+    }
+
+    } catch (error) {
+      console.error('Error uploading product:', error);
     }
   };
 
   
-const changed=async(e,_id)=>{
-  console.log(_id)
-  const lool={
-    role:e.target.value,
-    _id
+  const changed=async(e,_id)=>{
+    console.log(_id)
+    const data={
+      role:e.target.value,
+      userID:_id
+    }
+  
+    try {
+      const response = await axios.post(`http://localhost:1020/admin/changerole`,data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      // console.log(response.data.message);
+      if (response?.data?.sucess){
+              toast.success(response?.data?.message,
+                  { position: 'top-right',
+                   autoClose: 1000,
+                   // hideProgressBar: false,
+                   closeOnClick: true,
+                   pauseOnHover: true,
+                   draggable: true,
+                   }
+                 )
+
+          }
+          else{
+              toast.warn(response?.data?.message,
+                  { position: 'top-right',
+                   autoClose: 1000,
+                   // hideProgressBar: false,
+                   closeOnClick: true,
+                   pauseOnHover: true,
+                   draggable: true,
+                   }
+                 )
+      
+          }
+    
+    } catch (e) {
+      console.error(e);
+    }finally{
+      fetchDetails()
+
+    }
   }
 
-  try {
-    const response = await axios.post(`http://localhost:5555/admin/changerole`,lool, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+  const handle_customer=async(_id)=>{
+    const id=_id
 
-    fetchOrders()
+      try {
+        const response = await axios.get(`http://localhost:1020/admin/getcustomer/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      // console.log("sheeraz",response.data)
+      if (response.data.success) {
+        setCustomerdata(response.data.user)
+    setCustomermodel(true)
+      }
 
-  } catch (e) {
-    console.error(e);
+     
+    } catch (e) {
+      console.error(e);
+    }
   }
-}
-
-const removeuser =async(_id)=>{
-  // console.log("fuck u",_id)
-
-  try {
-    const response = await axios.put(`http://localhost:5555/admin/removeuser`,{_id}, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    fetchOrders()
-   
-  } catch (e) {
-    console.error(e);
-  }
-}
 
 useEffect(() => {
+  fetchDetails()
   
 
-    fetchOrders();
+    // fetchOrders();
   }, [token]);
   return (
     <div className="min-h-screen bg-gray-100 p-10">
@@ -73,22 +114,22 @@ useEffect(() => {
         <p className="text-gray-600">Manage and view all the registered customer.</p>
       </header>
 
-      {/* Sellers Cards Grid */}
+      {/* Users Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {sellers.map((seller) => (
-          (seller.role==='user'&&
-          <div key={seller._id} className="bg-white rounded-lg shadow-md p-6 transform hover:scale-105 transition-transform duration-300">
-            {/* Seller Info */}
+        {totalUser.map((user) => (
+          // (user.role==='user'&&
+          <div key={user._id} className="bg-white rounded-lg shadow-md p-6 transform hover:scale-105 transition-transform duration-300">
+            {/* User Info */}
             <div className="mb-4">
               <div className='flex justify-between'>
-              <h2 className="text-xl font-semibold text-gray-800">{seller.username}</h2>
+              <h2 className="text-xl font-semibold text-gray-800">{user.username}</h2>
               <div className='flex items-center gap-1'>
                 <p className="font-bold text-gray-800">role:</p>
 
 
-                <select value={seller.role} onChange={(e)=>changed(e,seller._id)}>
+                <select value={user.role} onChange={(e)=>changed(e,user._id)}>
                 <option value='admin' >Admin</option>
-                <option value='seller'>Seller</option>
+                <option value='user'>User</option>
                 <option value='user'>User</option>
 
 
@@ -99,43 +140,40 @@ useEffect(() => {
 
               </div>
               
-              <p className="text-gray-600">{seller.email}</p>
+              <p className="text-gray-600">{user.email}</p>
             </div>
             {/* Stats */}
             <div className="flex justify-between items-center">
               <div>
                 <p className="text-gray-500">Products:</p>
-                <p className="font-bold text-gray-800">{seller.sellerCreated.length}</p>
+                <p className="font-bold text-gray-800">{user?.products?.length}</p>
               </div>
               <div>
                 <p className="text-gray-500">Order:</p>
-                <p className="font-bold text-gray-800">{seller.order.length}</p>
+                <p className="font-bold text-gray-800">{user?.sellersorders?.length}</p>
               </div>
               <div className="text-right">
                 <p className="text-gray-500">Rating:</p>
-                <p className="font-bold text-yellow-500">{seller.rating} ⭐</p>
+                <p className="font-bold text-yellow-500">{user?.rating} ⭐</p>
               </div>
             </div>
             {/* Buttons */}
             <div className="mt-6 flex justify-between">
-              <button onClick={()=>removeuser(seller._id)} className="text-white bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-md">
-                View Products
+              <button onClick={()=>handle_customer(user._id)} className="text-white bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-md">
+                View Customer
               </button>
               <button className="text-white bg-red-500 hover:bg-red-600 px-4 py-2 rounded-md">
-              Remove {seller.role}
+              Remove {user.role}
               </button>
             </div>
           </div>
-        )))}
+        ))}
       </div>
+      {
+        customermodel&& <CustomerModel customer={customerdata}  setCustomermodel={()=>setCustomermodel(!customermodel)}/>
+      }
     </div>
   );
 }
-
-// export default AdminSellersPage;
-
-
-// export default TotalSellers
-
 
 export default TotalCustomers

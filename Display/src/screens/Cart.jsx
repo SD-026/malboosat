@@ -72,7 +72,7 @@ useEffect(() => {
   fetchProduct()
 }, []);
 
-console.log(totalamount)
+// console.log(totalamount)
 
 
 

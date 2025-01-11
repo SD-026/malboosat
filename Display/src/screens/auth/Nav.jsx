@@ -9,8 +9,12 @@ import { FcAddImage } from "react-icons/fc";
 import { FcHome } from "react-icons/fc";
 
 import { FcInternal } from "react-icons/fc";
-
+import { FcBusinessman } from "react-icons/fc";
+import { FcCustomerSupport } from "react-icons/fc";
 import { useNavigate } from "react-router-dom";
+import { Users, Package, DollarSign, TrendingUp, ListOrdered ,GitPullRequestClosed ,BookOpenCheck  } from 'lucide-react';
+
+import { FcVoicePresentation } from "react-icons/fc";
 import axios from "axios";
 
 const Nav = ({toggleDrawer, children }) => {
@@ -27,63 +31,70 @@ const Nav = ({toggleDrawer, children }) => {
         { user?.role ==='admin' ? (
         
         <div className="flex  ">
-            {/* <div className={`fixed top-0 left-0 h-full pl-3 ${drawer ?'w-64':'hidden'} bg-white text-black font-semibold z-40`}> */}
-            <div className={`border-l-2 max-md:hidden  flex flex-col justify-between shadow-lg fixed top-0 left-0 h-full pl-3 bg-white overflow-hidden text-black font-semibold z-40`}>
+          
+            <div className={`border-l-2 max-md:hidden  flex flex-col justify-between shadow-lg fixed top-0 left-0 h-full pl-3 bg-white overflow-hidden text-black font-semibold z-10`}>
                
                 <div className={`${drawer ?'w-64':'hidden'} `}>
                 <div className="p-4 flex">
                     <div className="block mt-2">
-                        {/* <FaBars className="text-[#FF3F3E] text-3xl cursor-pointer" onClick={toggleDrawer} /> */}
+               
 
-                      S.D_Shop
+                     
                     </div> 
                     {/* <img alt="Logo" className="w-12 h-12" /> */}
                 </div>
 
-                <div className="p-2 flex cursor-pointer hover:bg-gray-200" onClick={()=>navigate('/')} >
-                    <FaHome className="text-3xl cursor-pointer" />
+                <div className="p-2 flex cursor-pointer mt-6 hover:bg-gray-200" onClick={()=>navigate('/A_Home')} >
+                    <FcHome className="h-8 w-8 text-blue-500 text-3xl cursor-pointer" />
                     <p className='pl-2' >Home</p>
                 </div>
 
-                <div className="p-2 flex cursor-pointer hover:bg-gray-200" onClick={()=>navigate('/help')}>
-                    <CiHeart className="text-black text-3xl cursor-pointer" />
-                    <p className='pl-2'>Help</p>
-                </div>
                 <div className="p-2 flex cursor-pointer hover:bg-gray-200" onClick={()=>navigate('/A_Totaladmins')}>
-                    <IoMdHelpCircleOutline className="text-3xl cursor-pointer" />
+                    <FcBusinessman className="text-3xl cursor-pointer" />
                     <p className='pl-2'>Total Admins</p>
                 </div>
 
                 
 
                 <div className="p-2 flex cursor-pointer hover:bg-gray-200" onClick={()=>navigate('/A_totalsellers')}>
-                    <IoMdHelpCircleOutline className="text-3xl cursor-pointer" />
+                    <FcCustomerSupport className="text-3xl text-blue-500 cursor-pointer" />
                     <p className='pl-2'>Total Sellers</p>
                 </div>
 
                 <div className="p-2 flex cursor-pointer hover:bg-gray-200" onClick={()=>navigate('/A_totalcustomer')} >
-                    <FaUserFriends className="text-2xl cursor-pointer text-black" />
+                    <Users className="text-2xl text-blue-600 cursor-pointer " />
                     <p className='pl-2'>total Customer</p>
                 </div>
                 
 
                 <div className="p-2 flex cursor-pointer hover:bg-gray-200" onClick={()=>navigate('/A_totalOrders')}>
-                    <MdOutlineFeedback className="text-3xl cursor-pointer" />
+                    <Package className=" h-8 w-8 text-green-500  cursor-pointer" />
                     <p className='pl-2'>TotalOrders</p>
+                </div>
+                
+                <div className="p-2 flex cursor-pointer hover:bg-gray-200" onClick={()=>navigate('/A_Createcollection')}>
+                    <Package className=" h-8 w-8 text-green-500  cursor-pointer" />
+                    <p className='pl-2'>Create Collection</p>
+                </div>
+
+                
+                <div className="p-2 flex cursor-pointer hover:bg-gray-200" onClick={()=>navigate('/userfeedback')}>
+                    <FcVoicePresentation className="text-black text-3xl cursor-pointer" />
+                    <p className='pl-2'>Help</p>
                 </div>
 
             </div>
-            <div className="   p-2 flex cursor-pointer hover:bg-gray-200" onClick={()=>navigate('/GetFeedBack')}>
+            {/* <div className="   p-2 flex cursor-pointer hover:bg-gray-200" onClick={()=>navigate('/GetFeedBack')}>
             <FaBars className=" text-3xl cursor-pointer" onClick={toggleDrawer} />
                     <p className='pl-2'>More</p>
-                </div>
+                </div> */}
             </div>
-            <div className="ml-64 max-md:ml-0 w-full">
+            <div className="ml-64    max-md:ml-0 w-full">
                 {children}
             </div>
         </div>
         ):user?.role==='seller'?(<div className="flex">
-            <div className={`fixed top-0 left-0 h-full pl-3 bg-white overflow-hidden text-black font-semibold z-40`}>
+            <div className={`fixed   max-md:hidden top-0 left-0 h-full pl-3 bg-white overflow-hidden text-black font-semibold z-40`}>
                 <div className="p-4 flex">
                     {/* <div className="block mt-2">
                         <FaBars className="text-[#FF3F3E] text-3xl cursor-pointer" onClick={toggleDrawer} />
@@ -130,7 +141,7 @@ const Nav = ({toggleDrawer, children }) => {
                 </div> */}
                 </div>
             </div>
-            <div className="ml-64 w-full ">
+            <div className="ml-64    max-md:ml-0 w-full ">
                 {children}
             </div>
         </div>): user?.role==='user'||user?.role===''||user?.role===undefined ? (<div className=" w-full">

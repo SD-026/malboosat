@@ -17,7 +17,7 @@ export default function Home (){
 
   // const [total_pending_returned, setTotal_pending_returned] = useState([])
 
-  const fetchProduct = async () => {
+  const fetchDetails = async () => {
     try {
       const res = await axios.get('http://localhost:1020/admin/allusers', {
         headers: {
@@ -52,7 +52,7 @@ export default function Home (){
         },
       });
       if(res.data.success) {
-    //  console.log(res.data)
+    //  console.log(res.data.Top_Sellers)
      setAll_Sellers(res.data.Total_Sellers)
      setTop_Sellers(res.data.Top_Sellers)
       
@@ -66,11 +66,12 @@ export default function Home (){
       // alert('Failed to add product.');
     } finally {
        // Hide loader
+       fetchDetails()
     }
   };
 
   useEffect(() => {
-    fetchProduct();
+    fetchDetails()
     fetchsellers()
   }, []);
   
@@ -84,6 +85,11 @@ export default function Home (){
           icon={<Users className="h-8 w-8 text-blue-500" />}
           title="Total Users"
           value={totalUser?.length||0}
+        />
+         <DashboardCard
+          icon={<Users className="h-8 w-8 text-blue-500" />}
+          title="Total Sellers"
+          value={all_sellers?.length||0}
         />
         <DashboardCard
           icon={<Package className="h-8 w-8 text-green-500" />}
@@ -167,13 +173,13 @@ const TopSellers = ({data}) => (
       {data?.map((seller) => (
         <div key={seller._id} className="flex items-center space-x-4 border-b pb-4">
           <img
-            src={`https://images.unsplash.com/photo-${1500000000000 + seller.username}?w=32&h=32&fit=crop&crop=face`}
+            src={seller?.profilePic}
             alt={`Seller ${seller}`}
             className="w-10 h-10 rounded-full"
           />
           <div className="flex-1">
-            <p className="font-medium">Seller Name {seller.username}</p>
-            <p className="text-sm text-gray-500">${1000 * seller.username} sales</p>
+            <p className="font-medium"> {seller.username.charAt(0).toUpperCase() + seller.username.slice(1)}</p>
+            <p className="text-sm text-gray-500"> ${seller.sellersorders.reduce((total, item) => total + item.totalAmount, 0)} sales</p>
           </div>
           <span className="text-sm font-medium text-blue-600">View</span>
         </div>

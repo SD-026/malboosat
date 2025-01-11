@@ -14,12 +14,27 @@ import { current } from '@reduxjs/toolkit';
 import { useDispatch, useSelector } from 'react-redux';
 import { setAuthUser } from '../redux/authSlice';
 
-const navigation = [
+const navigationuser = [
   { name: 'Home', href: '/', current: true },
   { name: 'Team', href: 'Ourteam', current: false },
   { name: 'Our Collectios', href: 'collections', current: false },
   { name: 'My Orders', href: 'myorders', current: false },
 ]
+
+const navigationadmin = [
+  { name: 'Home', href: '/', current: true },
+  { name: 'My   Sellers Team', href: 'Ourteam', current: false },
+  { name: 'Collectios', href: 'collections', current: false },
+  // { name: 'My Orders', href: 'myorders', current: false },
+]
+const navigationseller = [
+  { name: 'Home', href: '/', current: true },
+  { name: 'OurTeam', href: 'Ourteam', current: false },
+  { name: 'Our Collectios', href: 'collections', current: false },
+  { name: 'My Orders', href: 'myorders', current: false },
+
+]
+
 
   function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
@@ -28,10 +43,11 @@ const Dashboard = ({children}) => {
   
 
   const [Open, setOpened] = useState(false)
-  const [data, setData] = useState([])  
+ 
   const navigate=useNavigate()
   const token = localStorage.getItem('token');
   const dispatch=useDispatch()
+  // const {user}=useSelector(store=>store.auth)
   const [currented, setCurrent] = useState({
     name:'',
     currentpage:false
@@ -52,7 +68,7 @@ const Dashboard = ({children}) => {
   return (
     <div>
  
-    <Disclosure as="nav" className="bg-gray-800">
+    <Disclosure as="nav" className=" backdrop-blur-md  w-full bg-white/10 shadow-md left-0 fixed right-0   z-30">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
         <div className="relative flex h-16 items-center justify-between">
           <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
@@ -65,17 +81,19 @@ const Dashboard = ({children}) => {
             </DisclosureButton>
           </div>
           <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-            <div className="flex shrink-0 items-center">
+            <div className="flex shrink-0 items-center gap-x-1 cursor-pointer" onClick={()=>{
+              navigate('/')
+            }}>
               <img
                 alt="Malosaat"
                 src={logo}
                 className="h-8  rounded-full w-auto"
               />
-              {/* <h2 className='text-base font-semibold text-gray-500'>Malboosat</h2> */}
+              <h2 className='text-gray-900 rounded-md px-3 py-2 text-sm font-medium'>Malboosat</h2>
             </div>
             <div className="hidden sm:ml-6 sm:block">
               <div className="flex space-x-4">
-                {navigation.map((item) => (
+                {(user?.role==='admin'?navigationadmin:user?.role==='seller'?navigationseller:navigationuser).map((item) => (
                   <a
                     key={item.name}
                     // href={item.href}
@@ -85,7 +103,7 @@ const Dashboard = ({children}) => {
                     }}
                     aria-current={currented.name===item.name&&currented.currentpage===true ? 'page' : undefined}
                     className={classNames(
-                     currented.name===item.name&&currented.currentpage===true? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                     currented.name===item.name&&currented.currentpage===true? 'bg-gray-900 text-white' : 'text-gray-900 hover:bg-gray-700 hover:text-white',
                       'rounded-md px-3 py-2 text-sm font-medium',
                     )}
                   >
@@ -158,14 +176,14 @@ const Dashboard = ({children}) => {
                   //  setOpened(!Open)
                   navigate('/login')
                  }}
-                 className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+                 className="relative rounded-full  p-1 text-gray-700 hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
                >
                  <span className="absolute -inset-1.5" />
                  <span className="sr-only">View notifications</span>
                  {/* <TiShoppingCart aria-hidden="true" className="size-6"  /> */}
-                 <h2>
+                 
                   Login
-                 </h2>
+                 
                </button>  
                 
               )}
@@ -176,7 +194,7 @@ const Dashboard = ({children}) => {
 
       <DisclosurePanel className="sm:hidden">
         <div className="space-y-1 px-2 pb-3 pt-2">
-          {navigation.map((item) => (
+          {(user?.role==='admin'?navigationadmin:user?.role==='seller'?navigationseller:navigationuser).map((item) => (
             <DisclosureButton
               key={item.name}
               as="a"
@@ -198,7 +216,7 @@ const Dashboard = ({children}) => {
 
 
 <div
-// className={`${user?.role==='seller'||'admin'?'ml-64':''}`}
+className={`pt-6`}
 >
 
    {children}

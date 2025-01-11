@@ -152,13 +152,14 @@ export async function Get_All_Users(req, res) {
             return res.status(400).json({ message: "Admin not found" });
         }
         if(admin.role ==='admin') {
+
             const Total_Users = await User.find({ 
                 role: { $nin: ['seller', 'admin'] } 
               }).select("-password");
 
               const Total_Product = await Product.find() 
                
-              const Total_Orders = await Order.find()  
+              const Total_Orders = await Order.find().sort({createdAt:-1}) 
               const Total_Completed_Orders = await Order.find({ orderStatus:'Delivered'})  
               const Total_pending_Orders = await Order.find({ orderStatus:'Pending'})  
               const Total_Cancelled = await Order.find({ orderStatus:'Cancelled'})  
@@ -214,7 +215,7 @@ export async function Get_Top_Sellers(req, res) {
                   $expr: { $gte: [{ $size: "$sellersorders" }, minOrders] }
                 },
                 { password: 0 } // Exclude the password field
-              );
+              ).populate({path:'sellersorders',model:'Order',})
 
             
               res.status(200).json({message:"All sellers Fetched ",success:true,Top_Sellers,Total_Sellers})
@@ -241,6 +242,175 @@ export async function Get_Top_Sellers(req, res) {
      }
  
  }
+
+ export async function Get_Admins(req, res) {
+    const adminID= req.user._id
+      
+         try {
+ 
+         const admin = await User.findById({ _id:adminID }).select("-password")
+         if (!admin) {
+             return res.status(400).json({ message: "Admin not found" });
+         }
+         if(admin.role ==='admin') {
+             const Total_Amins = await User.find({ 
+                 role:'admin'} 
+               ).select("-password");
+              
+              res.status(200).json({message:"All sellers Fetched ",success:true,Total_Amins})
+ 
+ 
+         }
+         else  {
+             return res.status(400).json({ message: "You are not the admin" })
+         }
+             // res.status(400).json({ message: "You are not the admin" })
+ 
+ 
+ 
+         // const S_Users = await User.find({ role: { $ne: 'seller admin' } }).select("-password")
+         // if (!S_Users) {
+ 
+         // }
+ 
+     }
+ 
+     catch (err) {
+         console.log(err)
+         return res.status(500).json({ message: 'Server error' });
+     }
+ 
+ }
+
+ 
+
+
+ export async function Change_Role(req, res) {
+    const adminID = req.user._id;
+    const { userID, role } = req.body;
+
+    try {
+        const admin = await User.findById({ _id: adminID }).select("-password");
+        if (!admin) {
+            return res.status(400).json({ message: "Admin not found" });
+        }
+
+        if (admin.role === 'admin') {
+            const updatedUser = await User.findByIdAndUpdate(
+                { _id: userID },
+                { role: role },
+                { new: true } // This option returns the updated document
+            );
+
+            if (!updatedUser) {
+                return res.status(404).json({ message: "User not found" });
+            }
+
+            res.status(200).json({
+                message: `${updatedUser.username} is now a ${updatedUser.role}`,
+                success: true
+            });
+        } else {
+            return res.status(400).json({ message: "You are not the admin" });
+        }
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({ message: 'Server error' });
+    }
+}
+
+
+export async function Get_user(req, res) {
+    // const adminID = req.user._id;
+    const {id}=req.params;
+    // const { userID, role } = req.body;
+
+    try {
+        const user = await User.findById({ _id: id }).select("-password");
+        if (!user) {
+            return res.status(400).json({ message: "Customer not found ", success: false });
+        }
+        return res.status(200).json({ message: "Customer found successfull ", success: true,user });
+
+
+       
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({ message: 'Server error' });
+    }
+}
+
+export async function Get_seller(req, res) {
+    const { id } = req.params;
+
+    try {
+        // Find the seller by ID, populate their orders, and exclude the password field
+        const seller = await User.findById(id)
+            .select("-password")
+            .populate({
+                path: 'sellersorders',
+                model: 'Order',
+                select: 'orderStatus', // Select only the orderStatus field
+            });
+
+        if (!seller) {
+            return res.status(404).json({ message: "Seller not found", success: false });
+        }
+
+        // Initialize order summary counts
+        const orderSummary = {
+            pending: 0,
+            processing: 0,
+            shipped: 0,
+            delivered: 0,
+            canceled: 0,
+        };
+
+        // Count orders by status
+        seller.sellersorders.forEach(order => {
+            orderSummary[order.orderStatus.toLowerCase()] += 1;
+        });
+
+        return res.status(200).json({
+            message: "Seller found successfully",
+            success: true,
+            seller: {
+                username: seller.username,
+                email: seller.email,
+                gender: seller.gender,
+                role: seller.role,
+                profilePic: seller.profilePic,
+                orders: orderSummary, // Return the aggregated order summary
+            },
+        });
+
+    } catch (err) {
+        console.error("Error fetching seller:", err);
+        return res.status(500).json({ message: "Server error", success: false });
+    }
+}
+
+
+
+export async function Get_Order(req, res) {
+    ;
+     const {id}=req.params;
+   
+ 
+     try {
+         const order = await Order.findById({ _id: id })
+         if (!order) {
+             return res.status(400).json({ message: "Order not found ", success: false });
+         }
+        //  console.log(seller.username)
+         return res.status(200).json({ message: "Order found successfull ", success: true,order });
+ 
+     } catch (err) {
+         console.log(err);
+         return res.status(500).json({ message: 'Server error' });
+     }
+ }
+
 
 
 

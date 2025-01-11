@@ -1,33 +1,86 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import SellerModel from './models/SellerModel';
 
 function TotalAdmins() {
   // Sample seller data
-  const [sellers, setSellers] = useState([]);
+  const [admin, setadmin] = useState([]);
+    const [sellerdata, setsellerdata] = useState([])
+    const [sellermodel, setSellermodel] = useState(false)
+  
   
   const token = localStorage.getItem('token');
 
   // Fetching sellers data (use a real API in production)
+
+  const fetch_admin = async () => {
+    try {
+      const res = await axios.get('http://localhost:1020/admin/totaladmins', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log(res.data)
+
+      if(res.data.success) {
+        console.log(res.data.Total_Amins)
+
+        setadmin(res.data.Total_Amins)
+    }}catch (e) {
+      console.error(e);
+    }
+  };
  
-const changed=async(e,_id)=>{
-  // console.log(_id)
-  const lool={
-    role:e.target.value,
-    _id
-  }
+  const changed=async(e,_id)=>{
+    console.log(_id)
+    const data={
+      role:e.target.value,
+      userID:_id
+    }
+  
+    try {
+      const response = await axios.post(`http://localhost:1020/admin/changerole`,data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-  try {
-    const response = await axios.post(`http://localhost:5555/admin/changerole`,lool, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    fetchOrders()
+      // console.log(response.data.message);
+      if (response?.data?.sucess){
+              toast.success(response?.data?.message,
+                  { position: 'bottom-right',
+                   autoClose: 1000,
+                   // hideProgressBar: false,
+                   closeOnClick: true,
+                   pauseOnHover: true,
+                   draggable: true,
+                   }
+                 )
 
-  } catch (e) {
-    console.error(e);
+          }
+          else{
+              toast.warn(response?.data?.message,
+                  { position: 'bottom-right',
+                   autoClose: 1000,
+                   // hideProgressBar: false,
+                   closeOnClick: true,
+                   pauseOnHover: true,
+                   draggable: true,
+                   }
+                 )
+      
+          }
+    
+
+    } catch (e) {
+      console.error(e);
+    }finally{
+      fetch_admin()
+
+    }
   }
-}
 
 const removeuser =async(_id)=>{
   // console.log("fuck u",_id)
@@ -39,7 +92,7 @@ const removeuser =async(_id)=>{
       },
     });
 
-    fetchOrders()
+    // fetchOrders()
 
 
    
@@ -63,11 +116,36 @@ const fetchOrders = async () => {
 };
 
 
+
+
 useEffect(() => {
+  fetch_admin()
   
 
-    fetchOrders();
+    // fetchOrders();
+
   }, [token]);
+
+  const handle_seller=async(_id)=>{
+    const id=_id
+
+      try {
+        const response = await axios.get(`http://localhost:1020/admin/getseller/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      // console.log("sheeraz",response.data)
+      if (response.data.success) {
+        setsellerdata(response.data.seller)
+    setSellermodel(true)
+      }
+
+     
+    } catch (e) {
+      console.error(e);
+    }
+  }
 
 
   return (
@@ -80,8 +158,8 @@ useEffect(() => {
 
       {/* Sellers Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {sellers.map((seller) => (
-          (seller.role==='admin'&&
+        {admin?.map((seller) => (
+          // (admin.role==='admin'&&
           <div key={seller._id} className="bg-white rounded-lg shadow-md p-6 transform hover:scale-105 transition-transform duration-300">
             {/* Seller Info */}
             <div className="mb-4">
@@ -111,29 +189,34 @@ useEffect(() => {
             <div className="flex justify-between items-center">
               <div>
                 <p className="text-gray-500">Products:</p>
-                <p className="font-bold text-gray-800">{seller.sellerCreated.length}</p>
+                <p className="font-bold text-gray-800">{seller?.products?.length}</p>
               </div>
               <div>
                 <p className="text-gray-500">Order:</p>
-                <p className="font-bold text-gray-800">{seller.order.length}</p>
+                <p className="font-bold text-gray-800">{seller?.sellersorders?.length}</p>
               </div>
               <div className="text-right">
                 <p className="text-gray-500">Rating:</p>
-                <p className="font-bold text-yellow-500">{seller.rating} ⭐</p>
+                <p className="font-bold text-yellow-500">{seller?.rating} ⭐</p>
               </div>
             </div>
             {/* Buttons */}
             <div className="mt-6 flex justify-between">
-              <button onClick={()=>removeuser(seller._id)} className="text-white bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-md">
-                View Products
+              <button onClick={()=>handle_seller(seller._id)} className="text-white bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-md">
+                View Admin
               </button>
               <button className="text-white bg-red-500 hover:bg-red-600 px-4 py-2 rounded-md">
               Remove {seller.role}
               </button>
             </div>
           </div>
-        )))}
+        ))}
       </div>
+      {
+        sellermodel&&
+        <SellerModel seller={sellerdata} setSellermodel={()=>setSellermodel(!sellermodel)}/>
+
+      }
     </div>
   );
 }
