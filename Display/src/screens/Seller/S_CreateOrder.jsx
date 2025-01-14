@@ -49,7 +49,7 @@ const S_CreateOrder = () => {
       // console.log(res);
       // alert('Product added successfully!');
       
-      navigate('/product');
+      navigate('/S_Home');
     } catch (error) {
       console.error('Error uploading product:', error);
       alert('Failed to add product.');
