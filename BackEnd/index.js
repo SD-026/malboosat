@@ -10,6 +10,10 @@ import admin from './routes/admin.routes.js'
 
 import { app,server } from "./socket/socket.js";
 import dotenv from 'dotenv'
+import path from "path";
+
+const __dirname = path.resolve();
+
 
 
 
@@ -30,6 +34,10 @@ app.use('/product', product)
 
 app.use('/admin',admin )
 // app.use('/msg',msgRoutes)
+app.use(express.static(path.join(__dirname, '/Display/dist')))
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, 'Display','dist','index.html'));
+})
 
 
 
