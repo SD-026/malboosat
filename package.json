@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon BackEnd/index.js",
-    "build":"npm install && npm install --prefix Display && npm run build --prefix Display",
+    "build": "npm install && npm install --prefix Display && npm run build --prefix Display",
     "start": "nodemon BackEnd/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -23,6 +23,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.8.3",
     "multer": "^1.4.5-lts.1",
+    "nodemon": "^3.1.9",
     "sharp": "^0.33.5",
     "socket.io": "^4.8.1"
   }
