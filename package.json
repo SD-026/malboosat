@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "nodemon BackEnd/index.js",
     "build":"npm install && npm install --prefix Display && npm run build --prefix Display",
-    "start": "nodemon BackEnd/index.js",
+    "start": "node BackEnd/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "sheeraz",
