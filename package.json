@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "node BackEnd/index.js",
+    "dev": "nodemon BackEnd/index.js",
     "build":"npm install && npm install --prefix Display && npm run build --prefix Display",
-    "start": "node BackEnd/index.js",
+    "start": "nodemon BackEnd/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "sheeraz",
