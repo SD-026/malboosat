@@ -94,7 +94,7 @@ const Nav = ({toggleDrawer, children }) => {
             </div>
         </div>
         ):user?.role==='seller'?(<div className="flex">
-            <div className={`fixed   max-md:hidden top-0 left-0 h-full pl-3 bg-white overflow-hidden text-black font-semibold z-40`}>
+            <div className={`fixed  pt-12 max-md:hidden top-0 left-0 h-full pl-3 bg-white overflow-hidden text-black font-semibold z-10`}>
                 <div className="p-4 flex">
                     {/* <div className="block mt-2">
                         <FaBars className="text-[#FF3F3E] text-3xl cursor-pointer" onClick={toggleDrawer} />

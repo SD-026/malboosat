@@ -56,7 +56,7 @@ const AllProduct = () => {
                   <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
                     <img
                       alt={product.imageAlt}
-                      src={product.P_images[3]}
+                      src={product.P_images[3]||product.P_images[2]||product.P_images[1]||product.P_images[0]}
                       className="h-full w-full object-cover object-center lg:h-full lg:w-full"
                     />
                   </div>
@@ -65,7 +65,7 @@ const AllProduct = () => {
                       <h3 className="text-sm text-gray-700">
                         <a>
                           <span aria-hidden="true" className="absolute inset-0" />
-                          {product.productname}
+                          {product?.productname}
                         </a>
                       </h3>
                       {/* <p className="mt-1 text-sm text-gray-500">{product.color}</p> */}
@@ -74,7 +74,7 @@ const AllProduct = () => {
                       
                     <p className="text-sm font-medium text-gray-900">Rs: {product?.productprice}</p>
 
-                    <p className="text-sm font-medium text-gray-900">{product?.sellername}</p>
+                    <p className="text-sm font-medium text-gray-900">{product?.username}</p>
 
 
                     </div>

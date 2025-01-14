@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useSelector } from 'react-redux';
 
 function Myorder() {
   const [orders, setOrders] = useState([]);
   const token = localStorage.getItem('token');
+  const {user}=useSelector(store=>store.auth)
 
   // Fetching order data from the backend
   useEffect(() => {
@@ -38,7 +40,7 @@ function Myorder() {
     <div className="min-h-screen bg-gray-100 p-10">
       {/* Page Header */}
       <header className="text-center mb-10">
-        <h1 className="text-4xl font-bold text-gray-800 mb-4">Username  Dashboard - Orders</h1>
+        <h1 className="text-4xl font-bold text-gray-800 mb-4">{user?.username}  Dashboard - Orders</h1>
         {/* <p className="text-gray-600">View customer order requests</p> */}
       </header>
 

@@ -152,12 +152,12 @@ function CreateOrder() {
               <div className="flex items-center">
                 <img
                   alt={product.imageAlt}
-                  src={product?.Cartproduct?.P_images[3]}
+                  src={product?.Cartproduct?.P_images[3]||product?.Cartproduct?.P_images[2]||product?.Cartproduct?.P_images[1]||product?.Cartproduct?.P_images[1]}
                   className="h-20 w-20 rounded-lg object-cover mr-4"
                 />
                 <div>
                   <h3 className="text-lg font-medium text-gray-900">{product?.productname}</h3>
-                  <p className="text-sm text-gray-500">${product?.Cartproduct?.productprice}</p>
+                  <p className="text-sm text-gray-500">Rs: {product?.Cartproduct?.productprice}</p>
                 </div>
               </div>
 
@@ -187,9 +187,9 @@ function CreateOrder() {
         </ul>
 
         <div className="mt-6 text-right">
-          <p className="text-lg font-semibold text-gray-800">Subtotal: ${totalAmount}</p>
-          <p className="text-lg font-semibold text-gray-800">Shipping: $10</p>
-          <p className="text-xl font-bold text-gray-900">Total Payable: ${totalAmount + 10}</p>
+          <p className="text-lg font-semibold text-gray-800">Subtotal: Rs: {totalAmount}</p>
+          <p className="text-lg font-semibold text-gray-800">Shipping Fees: Rs: 10</p>
+          <p className="text-xl font-bold text-gray-900">Total Payable: Rs: {totalAmount + 10}</p>
         </div>
       </div>
 
@@ -232,7 +232,7 @@ function CreateOrder() {
               Phone Number
             </label>
             <input
-              type="tel"
+              type="number"
               name="phone"
               id="phone"
               value={formData.phone}
