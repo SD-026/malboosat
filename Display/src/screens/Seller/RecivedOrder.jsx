@@ -12,7 +12,7 @@ function RecivedOrder() {
   // Fetching order data from the backend
   const fetchOrders = async () => {
     try {
-      const response = await axios.get(`http://localhost:1020/seller/getorderhistory`, {
+      const response = await axios.get(`https://malboosat-1.onrender.com/seller/getorderhistory`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -40,7 +40,7 @@ function RecivedOrder() {
       status:e.target.value
     }
     try {
-      const response = await axios.post(`http://localhost:1020/seller/updatestatus`,data, {
+      const response = await axios.post(`https://malboosat-1.onrender.com/seller/updatestatus`,data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

@@ -17,7 +17,7 @@ function TotalAdmins() {
 
   const fetch_admin = async () => {
     try {
-      const res = await axios.get('http://localhost:1020/admin/totaladmins', {
+      const res = await axios.get('https://malboosat-1.onrender.com/admin/totaladmins', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -41,7 +41,7 @@ function TotalAdmins() {
     }
   
     try {
-      const response = await axios.post(`http://localhost:1020/admin/changerole`,data, {
+      const response = await axios.post(`https://malboosat-1.onrender.com/admin/changerole`,data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -130,7 +130,7 @@ useEffect(() => {
     const id=_id
 
       try {
-        const response = await axios.get(`http://localhost:1020/admin/getseller/${id}`, {
+        const response = await axios.get(`https://malboosat-1.onrender.com/admin/getseller/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

@@ -30,7 +30,7 @@ const EditProduct = () => {
     const fetchProduct = async () => {
         // debugger
       try {
-        const response = await axios.get(`http://localhost:1020/product/getproduct/${id}`);
+        const response = await axios.get(`https://malboosat-1.onrender.com/product/getproduct/${id}`);
         console.log(response.data.products)
         const product = response.data.products; 
         // Assuming the response contains the product in "product" field
@@ -66,7 +66,7 @@ const EditProduct = () => {
     formData.append('highlights', JSON.stringify(highlights));
 
     try {
-      const res=await axios.post(`http://localhost:1020/seller/editproduct/${id}`, formData, {
+      const res=await axios.post(`https://malboosat-1.onrender.com/seller/editproduct/${id}`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

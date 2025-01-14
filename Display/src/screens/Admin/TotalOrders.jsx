@@ -28,7 +28,7 @@ function TotalOrders() {
   // Fetching orders data (use a real API in production)
   const fetchDetails = async () => {
     try {
-      const res = await axios.get('http://localhost:1020/admin/allusers', {
+      const res = await axios.get('https://malboosat-1.onrender.com/admin/allusers', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -76,7 +76,7 @@ function TotalOrders() {
     const id=_id
 
       try {
-        const response = await axios.get(`http://localhost:1020/product/getproduct/${id}`, {
+        const response = await axios.get(`https://malboosat-1.onrender.com/product/getproduct/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -98,7 +98,7 @@ function TotalOrders() {
     const id=_id
 
       try {
-        const response = await axios.get(`http://localhost:1020/admin/getseller/${id}`, {
+        const response = await axios.get(`https://malboosat-1.onrender.com/admin/getseller/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -118,7 +118,7 @@ function TotalOrders() {
     const id=_id
 
       try {
-        const response = await axios.get(`http://localhost:1020/admin/getcustomer/${id}`, {
+        const response = await axios.get(`https://malboosat-1.onrender.com/admin/getcustomer/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -138,7 +138,7 @@ function TotalOrders() {
     const id=_id
 
     try {
-      const response = await axios.get(`http://localhost:1020/admin/getorder/${id}`, {
+      const response = await axios.get(`https://malboosat-1.onrender.com/admin/getorder/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

@@ -86,7 +86,7 @@ const token = localStorage.getItem('token');
 const editproduct = async() => {
     // debugger
   try {
-    const response = await axios.post(`http://localhost:1020/seller/editproduct`,predata,{  
+    const response = await axios.post(`https://malboosat-1.onrender.com/seller/editproduct`,predata,{  
       headers: {
        Authorization: `Bearer ${token}`,
    },
@@ -127,7 +127,7 @@ const editproduct = async() => {
 useEffect(() => {
   const fetchProduct = async () => {
     try {
-      const response = await axios.get(`http://localhost:1020/product/getproduct/${id}`);
+      const response = await axios.get(`https://malboosat-1.onrender.com/product/getproduct/${id}`);
       setProduct(response.data.products); // Assuming single product comes in the "singleproduct" field
       setLoading(false); // Turn off loading
     } catch (error) {
@@ -141,7 +141,7 @@ useEffect(() => {
 
 const deleteproduct = async () => {
   try {
-    const response = await axios.get(`http://localhost:1020/seller/deleteproduct/${id}`);
+    const response = await axios.get(`https://malboosat-1.onrender.com/seller/deleteproduct/${id}`);
      if (response?.data?.success){
       toast.success(response?.data?.message,
           { position: 'bottom-right',

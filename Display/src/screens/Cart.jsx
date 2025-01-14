@@ -29,7 +29,7 @@ export default function Cart({setOpen}) {
   // console.log(user)
   const fetchProduct = async () => {  
     try {
-    const response = await axios.get(`http://localhost:1020/user/getcart`,{
+    const response = await axios.get(`https://malboosat-1.onrender.com/user/getcart`,{
            headers: {
             Authorization: `Bearer ${token}`,
         },
@@ -53,7 +53,7 @@ export default function Cart({setOpen}) {
       P_id:_id,
     }  
     try {
-    const response = await axios.post(`http://localhost:1020/user/removefromcart`,predata,{
+    const response = await axios.post(`https://malboosat-1.onrender.com/user/removefromcart`,predata,{
       headers: {
        Authorization: `Bearer ${token}`,
    },

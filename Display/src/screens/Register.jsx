@@ -20,7 +20,7 @@ const Register = () => {
             password: password
         }
         try{
-            const response = await axios.post(`http://localhost:1020/user/register`,data)
+            const response = await axios.post(`https://malboosat-1.onrender.com/user/register`,data)
 
             console.log(response)
             if(response.data){

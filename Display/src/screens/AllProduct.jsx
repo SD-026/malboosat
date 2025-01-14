@@ -22,7 +22,7 @@ const AllProduct = () => {
   // useEffect(() => {
   //   const fetch = async () => {
   //     try{
-  //         const response = await axios.get(`http://localhost:1020/product/allproduct`)
+  //         const response = await axios.get(`https://malboosat-1.onrender.com/product/allproduct`)
   //         console.log(response)
   //         setData(response?.data.products)  
   //     }

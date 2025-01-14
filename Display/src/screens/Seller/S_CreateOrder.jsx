@@ -41,7 +41,7 @@ const S_CreateOrder = () => {
     formData.append('highlights', JSON.stringify(highlights));
 
     try {
-      const res = await axios.post('http://localhost:1020/seller/New_Product', formData, {
+      const res = await axios.post('https://malboosat-1.onrender.com/seller/New_Product', formData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

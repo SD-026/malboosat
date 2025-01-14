@@ -90,7 +90,7 @@ const AddtoCart = async() => {
 
   }
   try {
-    const response = await axios.post(`http://localhost:1020/user/addtocart`,predata,{  
+    const response = await axios.post(`https://malboosat-1.onrender.com/user/addtocart`,predata,{  
       headers: {
        Authorization: `Bearer ${token}`,
    },
@@ -134,7 +134,7 @@ const AddtoCart = async() => {
 useEffect(() => {
   const fetchProduct = async () => {
     try {
-      const response = await axios.get(`http://localhost:1020/product/getproduct/${id}`);
+      const response = await axios.get(`https://malboosat-1.onrender.com/product/getproduct/${id}`);
       setProduct(response.data.products); // Assuming single product comes in the "singleproduct" field
       setLoading(false); // Turn off loading
     } catch (error) {

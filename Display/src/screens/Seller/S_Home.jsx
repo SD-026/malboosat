@@ -24,7 +24,7 @@ const S_Home = () => {
       // }
   
       try{
-          const response = await axios.get(`http://localhost:1020/seller/getsellersproduct`,{
+          const response = await axios.get(`https://malboosat-1.onrender.com/seller/getsellersproduct`,{
             headers: {
              Authorization: `Bearer ${token}`,
          }, 

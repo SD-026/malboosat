@@ -19,7 +19,7 @@ export default function Home (){
 
   const fetchDetails = async () => {
     try {
-      const res = await axios.get('http://localhost:1020/admin/allusers', {
+      const res = await axios.get('https://malboosat-1.onrender.com/admin/allusers', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -46,7 +46,7 @@ export default function Home (){
   };
   const fetchsellers = async () => {
     try {
-      const res = await axios.get('http://localhost:1020/admin/topsellers', {
+      const res = await axios.get('https://malboosat-1.onrender.com/admin/topsellers', {
         headers: {
           Authorization: `Bearer ${token}`,
         },

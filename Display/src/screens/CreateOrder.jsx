@@ -30,7 +30,7 @@ function CreateOrder() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`http://localhost:1020/user/placeorder`, formData, {
+      const response = await axios.post(`https://malboosat-1.onrender.com/user/placeorder`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -46,7 +46,7 @@ function CreateOrder() {
 
   const fetchProduct = async () => {
     try {
-      const response = await axios.get(`http://localhost:1020/user/getcart`, {
+      const response = await axios.get(`https://malboosat-1.onrender.com/user/getcart`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -81,7 +81,7 @@ function CreateOrder() {
       const predata = { P_id:id,quantity: "plus" };
       // console.log(id)
     try {
-      const res =await axios.post(`http://localhost:1020/user/updatecart`, predata, {
+      const res =await axios.post(`https://malboosat-1.onrender.com/user/updatecart`, predata, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -100,7 +100,7 @@ function CreateOrder() {
       const predata = { P_id:id,quantity: "minus" };
       // console.log(id)
     try {
-      await axios.post(`http://localhost:1020/user/updatecart`, predata, {
+      await axios.post(`https://malboosat-1.onrender.com/user/updatecart`, predata, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -127,7 +127,7 @@ function CreateOrder() {
   const remove = async (_id) => {
     const predata = { P_id: _id };
     try {
-      await axios.post(`http://localhost:1020/user/removefromcart`, predata, {
+      await axios.post(`https://malboosat-1.onrender.com/user/removefromcart`, predata, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

@@ -15,7 +15,7 @@ function TotalCustomers() {
 
   const fetchDetails = async () => {
     try {
-      const res = await axios.get('http://localhost:1020/admin/allusers', {
+      const res = await axios.get('https://malboosat-1.onrender.com/admin/allusers', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -39,7 +39,7 @@ function TotalCustomers() {
     }
   
     try {
-      const response = await axios.post(`http://localhost:1020/admin/changerole`,data, {
+      const response = await axios.post(`https://malboosat-1.onrender.com/admin/changerole`,data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -83,7 +83,7 @@ function TotalCustomers() {
     const id=_id
 
       try {
-        const response = await axios.get(`http://localhost:1020/admin/getcustomer/${id}`, {
+        const response = await axios.get(`https://malboosat-1.onrender.com/admin/getcustomer/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

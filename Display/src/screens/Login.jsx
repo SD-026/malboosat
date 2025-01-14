@@ -20,7 +20,7 @@ const Login = () => {
 
         }
         try{
-            const response = await axios.post(`http://localhost:1020/user/login`,data)
+            const response = await axios.post(`https://malboosat-1.onrender.com/user/login`,data)
 
             console.log("fuck off sheraz ",response.data.user)  
             // console.log()

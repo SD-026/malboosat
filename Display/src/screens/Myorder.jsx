@@ -11,7 +11,7 @@ function Myorder() {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await axios.get(`http://localhost:1020/seller/getorderhistory`, {
+        const response = await axios.get(`https://malboosat-1.onrender.com/seller/getorderhistory`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
