@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import ProductFetch from '../hooks/ProductFetch';
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
-import logo from '../assets/Z_logo.png'
+// import logo from '../assets/Z_logo.png'
 import { current } from '@reduxjs/toolkit';
 import { useDispatch, useSelector } from 'react-redux';
 import { setAuthUser } from '../redux/authSlice';
@@ -86,7 +86,7 @@ const Dashboard = ({children}) => {
             }}>
               <img
                 alt="Malosaat"
-                src={logo}
+                src={"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYnZxSLl6GMgShr-hEMUbvu4p2WhAhDp7vJA&s"}
                 className="h-8  rounded-full w-auto"
               />
               <h2 className='text-gray-900 rounded-md px-3 py-2 text-sm font-medium'>Malboosat</h2>
